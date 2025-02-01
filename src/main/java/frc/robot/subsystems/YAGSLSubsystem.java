@@ -1,9 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.ClosedLoopOutputType;
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.signals.PIDOutput_PIDOutputModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
@@ -11,20 +8,17 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.ModuleConstants;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.config.BaseConfig;
+
 
 
 public class YAGSLSubsystem {
@@ -56,19 +50,19 @@ public class YAGSLSubsystem {
         steerEncoder = steerMotor.getEncoder();
         
         // Reset everything to factory default
-        driveMotor.configure(configDrive, null,  PersistMode.kPersistParameters);;
-        steerMotor.configure(configSteer, null,  PersistMode.kPersistParameters);;
+       // driveMotor.configure(configDrive, null,  PersistMode.kPersistParameters);
+       // steerMotor.configure(configSteer, null,  PersistMode.kPersistParameters);
         absoluteEncoder.getConfigurator().apply(new CANcoderConfiguration());
         
         // Continue configuration here..
         
         // CANcoder Configuration
-        CANcoderConfigurator cfg = encoder.getConfigurator();
+        CANcoderConfigurator cfg = absoluteEncoder.getConfigurator();
         cfg.apply(new CANcoderConfiguration());
         MagnetSensorConfigs  magnetSensorConfiguration = new MagnetSensorConfigs();
         cfg.refresh(magnetSensorConfiguration);
         cfg.apply(magnetSensorConfiguration
-                  .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
+      //            .withAbsoluteSensorRange(AbsoluteSensorRangeValue.Unsigned_0To1)
                   .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
         // Steering Motor Configuration
@@ -117,11 +111,12 @@ public class YAGSLSubsystem {
         
         // Save the SPARK MAX configurations. If a SPARK MAX browns out during
         // operation, it will maintain the above configurations.
-        driveMotor.configure(configDrive, ResetMode.kResetSafeParameters, null);
-        steerMotor.configure(configSteer, ResetMode.kResetSafeParameters, null);
+        driveMotor.configure(configDrive, ResetMode.kResetSafeParameters,  PersistMode.kPersistParameters);
+        steerMotor.configure(configSteer, ResetMode.kResetSafeParameters,  PersistMode.kPersistParameters);
           
         driveEncoder.setPosition(0);
-        steerEncoder.setPosition(encoder.getAbsolutePosition().refresh().getValue() * 360);
+        //steerEncoder.setPosition(absoluteEncoder.getAbsolutePosition().refresh().getValue() * 360);
+        steerEncoder.setPosition(absoluteEncoder.getAbsolutePosition(true).getValueAsDouble() * 360);
     }
     
     
