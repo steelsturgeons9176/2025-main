@@ -107,9 +107,9 @@ public final class Constants {
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
     public static final int kDrivingMotorCurrentLimit = 30; // amps
-    public static final int kTurningMotorCurrentLimit = 15; // amps 
+    public static final int kTurningMotorCurrentLimit = 15; // amps
 
-    
+
   }
 
   public static final class AutoConstants {
@@ -144,7 +144,7 @@ public final class Constants {
     public static final double loopPeriodSecs = 0.02;
   }
 
-// Changed ArmConstants to ClimbArmConstants for when we get the arm on the elevator 
+// Changed ArmConstants to ClimbArmConstants for when we get the arm on the elevator
 
   public static final class ClimbArmConstants {
     public static final int ARM_MOTOR_ID = 6;
@@ -171,4 +171,3 @@ public final class Constants {
 }
 
 
-  
