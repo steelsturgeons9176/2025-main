@@ -29,14 +29,15 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import  com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.KrakenMotorConstants;
 import frc.robot.Constants.NeoMotorConstants;
 import frc.robot.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
-  private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
-      NeoMotorConstants.kFrontLeftDrivingCanId,
+  private final YAGSLSubsystem m_frontLeft = new YAGSLSubsystem(
+      KrakenMotorConstants.kFrontLeftDrivingCanId,
       NeoMotorConstants.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset);
 
