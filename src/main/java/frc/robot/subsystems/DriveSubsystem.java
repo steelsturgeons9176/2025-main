@@ -21,12 +21,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.revrobotics.AbsoluteEncoder;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import  com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.KrakenMotorConstants;
@@ -36,10 +36,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
-  private final YAGSLSubsystem m_frontLeft = new YAGSLSubsystem(
+  private final KrakenSwerveModule m_frontLeft = new KrakenSwerveModule(
       KrakenMotorConstants.kFrontLeftDrivingCanId,
       NeoMotorConstants.kFrontLeftTurningCanId,
-      DriveConstants.kFrontLeftChassisAngularOffset);
+      KrakenMotorConstants.AbsoluteEncoder);
 
   private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
       NeoMotorConstants.kFrontRightDrivingCanId,

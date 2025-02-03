@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ModuleConstants;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -21,7 +22,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 
 
-public class YAGSLSubsystem {
+public class YAGSLSubsystem extends SubsystemBase {
 
     private SparkMax driveMotor;
     private SparkMax steerMotor;
@@ -33,7 +34,7 @@ public class YAGSLSubsystem {
     private SparkMaxConfig configSteer;
     private SparkMaxConfig configDrive;
 
-    public void SwerveModule(int driveMotorCANID, int steerMotorCANID, int cancoderCANID)
+    public void KrakenSwerveModule(int driveMotorCANID, int steerMotorCANID, int cancoderCANID)
     {
         driveMotor = new SparkMax(driveMotorCANID, MotorType.kBrushless);
         steerMotor = new SparkMax(steerMotorCANID, MotorType.kBrushless);
