@@ -49,6 +49,8 @@ public final class Constants {
 
     // Angular offsets of the modules relative to the chassis in radians
     public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
+    //public static final int kFrontLeftChassisAngularOffset = 4;
+    // TODO: Figure out what this is 
     public static final double kFrontRightChassisAngularOffset = 0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
@@ -130,7 +132,13 @@ public final class Constants {
 
   }
  // will add once we have our krakens positioned 
-  public static final class KrakenMotorConstants {}
+  public static final class KrakenMotorConstants {
+
+    public static final int kFrontLeftDrivingCanId = 20;
+    public static final int kFrontRightDrivingCanId = 30;
+    public static final int kRearRightDrivingCanId = 40;
+    public static final int kReartLeftDrivingCanId = 50;
+  }
 
   public static final class GlobalConstants {
     public static final double loopPeriodSecs = 0.02;
