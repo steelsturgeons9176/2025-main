@@ -10,19 +10,19 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.AbsoluteEncoderConfig;
-import com.revrobotics.spark.SparkBase;
+// import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+// import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import frc.robot.Constants.ModuleConstants;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.config.SparkBaseConfig;
+// import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.sim.SparkMaxAlternateEncoderSim;
-import com.revrobotics.spark.config.ClosedLoopConfig;
+// import com.revrobotics.sim.SparkMaxAlternateEncoderSim;
+// import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 public class MAXSwerveModule {
@@ -37,9 +37,9 @@ public class MAXSwerveModule {
 
   private double m_chassisAngularOffset = 0;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
-  
-  private SparkMaxConfig configSteer;
-  private SparkMaxConfig configDrive;
+
+  private final SparkMaxConfig configSteer;
+  private final SparkMaxConfig configDrive;
   /**
    * Constructs a MAXSwerveModule and configures the driving and turning motor,
    * encoder, and PID controller. This configuration is specific to the REV
@@ -67,7 +67,7 @@ public class MAXSwerveModule {
     // Apply position and velocity conversion factors for the driving encoder. The
     // native units for position and velocity are rotations and RPM, respectively,
     // but we want meters and meters per second to use with WPILib's swerve APIs.
-    configDrive.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);        
+    configDrive.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
     configDrive.encoder.velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
 
     // Apply position and velocity conversion factors for the turning encoder. We
@@ -79,7 +79,7 @@ public class MAXSwerveModule {
     // Invert the turning encoder, since the output shaft rotates in the opposite direction of
     // the steering motor in the MAXSwerve Module.
     configSteer.inverted(ModuleConstants.kTurningEncoderInverted);
-    
+
     // Enable PID wrap around for the turning motor. This will allow the PID
     // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
     // to 10 degrees will go through 0 rather than the other direction which is a
@@ -105,7 +105,7 @@ public class MAXSwerveModule {
     configSteer.closedLoop.velocityFF(ModuleConstants.kTurningFF);
     configsteer.ClosedLoop.outputRange(ModuleConstants.kTurningMinOutput,
         ModuleConstants.kTurningMaxOutput);
-        setOutputRange
+        // setOutputRange;
     m_drivingSparkMax.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
     m_turningSparkMax.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
     m_drivingSparkMax.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
