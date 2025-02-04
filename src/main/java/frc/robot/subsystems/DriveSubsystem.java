@@ -33,10 +33,11 @@ import frc.robot.Constants.KrakenMotorConstants;
 import frc.robot.Constants.NeoMotorConstants;
 import frc.robot.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.YAGSLSubsystem;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
-  private final KrakenSwerveModule m_frontLeft = new KrakenSwerveModule(
+  private final YAGSLSubsystem m_frontLeft = new YAGSLSubsystem(
       KrakenMotorConstants.kFrontLeftDrivingCanId,
       NeoMotorConstants.kFrontLeftTurningCanId,
       KrakenMotorConstants.AbsoluteEncoder);
