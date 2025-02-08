@@ -7,8 +7,10 @@ package frc.robot;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import swervelib.math.Matter;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -19,13 +21,16 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
+  
+  public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+  public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
-
+    //public static final double MAX_SPEED  = Units.feetToMeters(14.5);
     //public static final double kDirectionSlewRate = 1.2; // radians per second
     //public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
     //public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
@@ -50,12 +55,11 @@ public final class Constants {
     // Angular offsets of the modules relative to the chassis in radians
     public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
     //public static final int kFrontLeftChassisAngularOffset = 4;
-    // TODO: Figure out what this is 
     public static final double kFrontRightChassisAngularOffset = 0;
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-
+    
     public static final boolean kGyroReversed = false;
   }
 
@@ -70,13 +74,13 @@ public final class Constants {
     public static final boolean kTurningEncoderInverted = true;
 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
+    //public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = 0.0762;
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-    public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
-        / kDrivingMotorReduction;
+   // public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
+        // kDrivingMotorReduction;
 
     public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI)
         / kDrivingMotorReduction; // meters
@@ -92,7 +96,7 @@ public final class Constants {
     public static final double kDrivingP = 0.04;
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
-    public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
+   // public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 
@@ -139,6 +143,11 @@ public final class Constants {
     public static final int kRearRightDrivingCanId = 40;
     public static final int kReartLeftDrivingCanId = 50;
     public static final int AbsoluteEncoder = 1;
+
+    public static final int kRearRightDrivingCoderCanId = 0;
+    public static final int kRearLeftDrivingCoderCanId = 0;
+    public static final int kFrontRightDrivingCoderCanId = 0;
+    public static final int kFrontLeftDrivingCoderCanId = 0;
   }
 
   public static final class GlobalConstants {
@@ -167,6 +176,10 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final double DEADBAND        = 0.1;
+    public static final double LEFT_Y_DEADBAND = 0.1;
+    public static final double RIGHT_X_DEADBAND = 0.1;
+    public static final double TURN_CONSTANT    = 6;
   }
 
 }
