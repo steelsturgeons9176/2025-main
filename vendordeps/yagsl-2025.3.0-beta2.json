@@ -34,12 +34,7 @@
             "offlineFileName": "Phoenix6-25.1.0.json",
             "onlineUrl": "https://maven.ctr-electronics.com/release/com/ctre/phoenix6/latest/Phoenix6-frc2025-latest.json"
         },
-        {
-            "uuid": "ab676553-b602-441f-a38d-f1296eff6537",
-            "errorMessage": "Phoenix5 is required!",
-            "offlineFileName": "Phoenix5-5.35.0.json",
-            "onlineUrl": "https://maven.ctr-electronics.com/release/com/ctre/phoenix/Phoenix5-frc2025-latest.json"
-        },
+        
         {
             "uuid": "cb311d09-36e9-4143-a032-55bb2b94443b",
             "errorMessage": "Studica is required!",
