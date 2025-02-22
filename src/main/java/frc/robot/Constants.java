@@ -7,8 +7,10 @@ package frc.robot;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import swervelib.math.Matter;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -19,6 +21,10 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+  public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
@@ -127,10 +133,19 @@ public final class Constants {
     public static final int kRearLeftTurningCanId = 51;
     public static final int kRearRightTurningCanId = 41;
     public static final int kFrontRightTurningCanId = 31;
-
+    public static final int kFrontLeftCanCoderCanId = 0;
+    public static final int kFrontRightCanCoderCanId = 0;
+    public static final int kFreeSpeedRpm = 1;
   }
  // will add once we have our krakens positioned 
-  public static final class KrakenMotorConstants {}
+  public static final class KrakenMotorConstants {
+    public static final int kFrontLeftDrivingCanId = 21;
+    public static final int kFrontRightDrivingCanId = 0;
+    public static final int kRearLeftDrivingCanId = 51;
+    public static final int kRearRightDrivingCanId = 41;
+    public static final int kRearLeftCanCoderCanId = 0;
+    public static final int kRearRightCanCoderCanId = 0;
+  }
 
   public static final class GlobalConstants {
     public static final double loopPeriodSecs = 0.02;
@@ -158,6 +173,20 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final double TURN_CONSTANT    = 6;
+    public static final double DEADBAND        = 0.1;
+    public static final double LEFT_Y_DEADBAND = 0.1;
+    public static final double RIGHT_X_DEADBAND = 0.1;
+  }
+
+  public static final class ArmConstants {
+    public static final int ARM_MOTOR_ID = 6;
+    public static final int ARM_MOTOR_CURRENT_LIMIT = 60;
+    public static final double ARM_MOTOR_VOLTAGE_COMP = 10;
+    public static final double ARM_SPEED_DOWN = 0.4;
+    public static final double ARM_SPEED_UP = -0.4;
+    public static final double ARM_HOLD_DOWN = 0.1;
+    public static final double ARM_HOLD_UP = -0.15;
   }
 
 }

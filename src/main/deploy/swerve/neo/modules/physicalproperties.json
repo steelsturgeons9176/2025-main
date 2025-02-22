@@ -1,12 +1,12 @@
 {
     "conversionFactors": {
       "angle": {
-        "gearRatio": 21.4285714286,
+        "gearRatio": 46.42,
         "factor": 0
       },
       "drive": {
-        "gearRatio": 8.14,
-        "diameter": 4,
+        "gearRatio": 4.5,
+        "diameter": 3,
         "factor": 0
       }
     },

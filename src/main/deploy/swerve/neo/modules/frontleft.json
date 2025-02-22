@@ -5,22 +5,23 @@
       "canbus": null
     },
     "angle": {
-      "type": "talonfx",
-      "id": 8,
+      "type": "sparkmax_neo550",
+      "id": 51,
       "canbus": null
     },
     "encoder": {
-      "type": "cancoder",
-      "id": 3,
+      "type": "attached",
+      "id": 0,
       "canbus": null
     },
     "inverted": {
       "drive": false,
       "angle": false
     },
-    "absoluteEncoderOffset": -139.043,
+    "absoluteEncoderInverted": true,
+    "absoluteEncoderOffset": 0,
     "location": {
-      "front": 7,
-      "left": 7
+      "front": 16.25,
+      "left": -13.5
     }
   }
