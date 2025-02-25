@@ -13,13 +13,16 @@ public interface IntakeIO {
     public double coralWristPosition = 0.0;
   }
 
+
   class IntakeIOInputsAutoLogged extends IntakeIOInputs implements LoggableInputs {
+    @Override
     public void toLog(LogTable table) {
       table.put("coralWristCurrent", coralWristCurrent);
       table.put("coralWristVelocity", coralWristVelocity);
       table.put("coralWristPosition", coralWristPosition);
     }
 
+    @Override
     public void fromLog(LogTable table) {
       coralWristCurrent = table.get("coralWristCurrent", coralWristCurrent);
       coralWristVelocity = table.get("coralWristVelocity", coralWristVelocity);
