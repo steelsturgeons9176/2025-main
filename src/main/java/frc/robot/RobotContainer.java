@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+//hi arden
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
@@ -11,6 +11,9 @@ import frc.robot.commands.ClimberUpCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorIO;
+import frc.robot.subsystems.Elevator.ElevatorIOSparkMax;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -26,7 +29,10 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -39,6 +45,14 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final ClimberSubsystem m_climber = new ClimberSubsystem();
+  //private final Elevator elevator;
+  private final double PROCESSOR_HEIGHT = 0;
+  private final double SOURCE_HEIGHT = 8.75;
+  private final double L1_HEIGHT = 3;
+  private final double L2_HEIGHT = 4.75;
+  private final double L3_HEIGHT = 21.5;
+  private final double L4_HEIGHT = 52.5;
+  private final double TOP_ALGAE_HEIGHT = 34.5;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -47,7 +61,7 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
 
-                                                                                SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> m_driverController.getLeftY() * -1,
                                                                 () -> m_driverController.getLeftX() * -1)
                                                             .withControllerRotationAxis(m_driverController::getRightX)
@@ -96,6 +110,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    if (RobotBase.isReal()){
+      //elevator = new Elevator(new ElevatorIOSparkMax());
+    }
+    else if (RobotBase.isSimulation()){
+      //elevator = new Elevator(new ElevatorIO() {});
+    }
+    else{
+      //elevator = new Elevator(new ElevatorIO() {});
+    }
+
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -112,15 +136,29 @@ public class RobotContainer {
   private void configureBindings()
   {
 
-    Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
+    //Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-    Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
-    Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(
-        driveDirectAngle);
+    //Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
+    //Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
     Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard);
-    Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
-    Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
-        driveDirectAngleKeyboard);
+    //Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
+    //Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleKeyboard);
+    //Command liftToProcessorCommand = new RunCommand(() -> elevator.setPosition(PROCESSOR_HEIGHT), elevator);
+    //ParallelCommandGroup processorCommandGroup = new ParallelCommandGroup(liftToProcessorCommand, Commands.none());
+    //Command liftToSourceCommand = new RunCommand(() -> elevator.setPosition(SOURCE_HEIGHT), elevator);
+    ///Command liftToL1Command = new RunCommand(() -> elevator.setPosition(L1_HEIGHT), elevator);
+    //ParallelCommandGroup l1CommandGroup =new ParallelCommandGroup(liftToL1Command, Commands.none());
+    //Command liftToL2Command = new RunCommand(() -> elevator.setPosition(L2_HEIGHT), elevator);
+    //ParallelCommandGroup l2CommandGroup = new ParallelCommandGroup(liftToL2Command, Commands.none());
+    //Command liftToL3Command = new RunCommand(() -> elevator.setPosition(L3_HEIGHT), elevator);
+    //ParallelCommandGroup l3CommandGroup = new ParallelCommandGroup(liftToL3Command, Commands.none());
+    //Command liftToL4Command = new RunCommand(() -> elevator.setPosition(L4_HEIGHT), elevator);
+    //ParallelCommandGroup l4CommandGroup = new ParallelCommandGroup(liftToL4Command, Commands.none());
+    //Command liftToTopAlgaeCommand = new RunCommand(() -> elevator.setPosition(TOP_ALGAE_HEIGHT), elevator);
+    //ParallelCommandGroup topAlgaeCommandGroup = new ParallelCommandGroup(liftToTopAlgaeCommand, Commands.none());
+    //Command manualLift = new RunCommand(() -> elevator.setVoltage(-m_driverController.getLeftY() * 0.5), elevator);
+    // Command manualWrist = new RunCommand(() -> intake.setWristVoltage(operatorController.getRightY() * 0.25), intake);
+    // ParallelCommandGroup manualCommandGroup = new ParallelCommandGroup(manualLift, manualWrist);
 
     if (RobotBase.isSimulation())
     {
@@ -146,8 +184,16 @@ public class RobotContainer {
      // m_driverController.back().whileTrue(drivebase.centerModulesCommand());
       //m_driverController.leftBumper().onTrue(Commands.none());
       //m_driverController.rightBumper().onTrue(Commands.none());
-      m_driverController.pov(0).whileTrue(new ClimberUpCommand(m_climber));
-      m_driverController.pov(180).whileTrue(new ClimberDownCommand(m_climber));
+      m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
+      m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
+      //m_driverController.povDown().onTrue(processorCommandGroup);
+      //m_driverController.povLeft().onTrue(sourceCommandGroup);
+      //m_driverController.povUp().onTrue(topAlgaeCommandGroup);
+      //m_driverController.cross().onTrue(l1CommandGroup);
+      //m_driverController.circle().onTrue(l2CommandGroup);
+      //m_driverController.triangle().onTrue(l3CommandGroup);
+      //m_driverController.square().onTrue(l4CommandGroup);
+      //m_driverController.options().whileTrue(manualLift);
     } else
     {
       //m_driverController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
@@ -156,8 +202,16 @@ public class RobotContainer {
       //m_driverController.back().whileTrue(Commands.none());
       //m_driverController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       //m_driverController.rightBumper().onTrue(Commands.none());
-      m_driverController.pov(0).onTrue(Commands.none());
-      m_driverController.pov(180).onTrue(Commands.none());
+     // m_driverController.pov(0).onTrue(Commands.none());
+     // m_driverController.pov(180).onTrue(Commands.none());
+     // m_driverController.povDown().onTrue(Commands.none());
+     // m_driverController.povLeft().onTrue(Commands.none());
+     m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
+      m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
+     // m_driverController.circle().onTrue(Commands.none());
+     // m_driverController.triangle().onTrue(Commands.none());
+     // m_driverController.square().onTrue(Commands.none());
+      m_driverController.options().whileTrue(Commands.none());
     }
 
   }

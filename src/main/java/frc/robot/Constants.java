@@ -189,7 +189,15 @@ public final class Constants {
     public static final double ARM_HOLD_UP = -0.15;
   }
 
-}
-
-
-  
+  public static final class ElevatorConstants {
+    public static final int kLeadMotorID = 61;
+    public static final int kFollowMotorID = 71;
+    public static final double kElevatorP = 0.027;
+    public static final double kElevatorI = 0.0;
+    public static final double kElevatorD = 0.0;
+    public static final double kElevatorFF = 0.0085;
+    public static final double kElevatorMinOutput = -1.0;
+    public static final double kElevatorMaxOutput = 1.0;
+    public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
+  }
+}  
