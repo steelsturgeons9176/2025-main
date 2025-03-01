@@ -8,6 +8,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import frc.robot.Constants.ArmConstants;
+
 // import frc.robot.subsystems.intake.IntakeIO.IntakeIOInputs;
 
 public class IntakeIOSparkMax implements IntakeIO {
@@ -24,10 +26,10 @@ public class IntakeIOSparkMax implements IntakeIO {
 
   public IntakeIOSparkMax() {
     // find actual motor IDs
-    algaeMotor1 = new SparkMax(17, MotorType.kBrushless);
-    algaeMotor2 = new SparkMax(27, MotorType.kBrushless);
-    coralIntake = new SparkMax(15, MotorType.kBrushless);
-    coralWrist = new SparkMax(16, MotorType.kBrushless); // dont have yet
+    algaeMotor1 = new SparkMax(ArmConstants.ARM_ALGAE_MOTOR1_ID, MotorType.kBrushless);
+    algaeMotor2 = new SparkMax(ArmConstants.ARM_ALGAE_MOTOR2_ID, MotorType.kBrushless);
+    coralIntake = new SparkMax(ArmConstants.ARM_CORAL_MOTOR_ID, MotorType.kBrushless);
+    coralWrist = new SparkMax(ArmConstants.ARM_WRIST_MOTOR_ID, MotorType.kBrushless); 
 
     algeaMotorConfig = new SparkMaxConfig();
     coralIntakeConfig = new SparkMaxConfig();
@@ -58,6 +60,7 @@ public class IntakeIOSparkMax implements IntakeIO {
     wristEncoder = coralWrist.getEncoder();
 
     algaeMotor1.configure(algeaMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    algeaMotorConfig.inverted(true);
     algaeMotor2.configure(algeaMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     coralIntake.configure(coralIntakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -75,7 +78,8 @@ public class IntakeIOSparkMax implements IntakeIO {
   @Override
   public void setAlgaeVoltage(double voltage) {
     algaeMotor1.setVoltage(voltage);
-    algaeMotor2.setVoltage(-voltage);
+    algaeMotor2.setVoltage(voltage);
+    // instead of changing it to inverted we can change the voltage to negative 
   }
 
   @Override
