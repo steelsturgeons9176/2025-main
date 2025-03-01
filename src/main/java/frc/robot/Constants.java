@@ -187,11 +187,31 @@ public final class Constants {
     public static final double ARM_SPEED_UP = -0.4;
     public static final double ARM_HOLD_DOWN = 0.1;
     public static final double ARM_HOLD_UP = -0.15;
+
+    public static final double kOffset = 0;
+    public static final double kMinHeightAbs = 0 + kOffset;
+    public static final double kMaxHeightAbs = .25 + kOffset;
+    public static final double STOWED = (10.0/360.0f) + kOffset; // 0 degrees ~ 0/360 - 0
+    public static final double INTAKE = 0.0472 + kOffset; // 17 degrees ~ 17/360 - 0.0472
+    public static final double SOURCE = .125 + kOffset; // 45 degrees ~ 90/360 - 0.125
+    public static final double SUBSHOT = (53.0f/360.0f) + kOffset; // 60 degrees ~ 60/360 - 0.166
+    public static final double PODSHOT = (33.0f/360.0f) + kOffset; //TODO: revert back to 33.0f
+    public static final double LONGSHOT = (26.25f/360.0f) + kOffset;
+    public static final double AMP = .25 + kOffset; // 90 degrees ~ 90/360 - 0.25
+    public static final double POOP = (7.0f/360.0f) + kOffset;
+    public static final double kArmMinOutput = -.6;
+    public static final double kArmMaxOutput = .6;
+    public static final double kAllowedErrAbs = .008f;
+
+    public static final int ARM_ALGAE_MOTOR1_ID = 12;
+    public static final int ARM_ALGAE_MOTOR2_ID = 13;
+    public static final int ARM_CORAL_MOTOR_ID = 14;
+    public static final int ARM_WRIST_MOTOR_ID = 15;
   }
 
   public static final class ElevatorConstants {
-    public static final int kLeadMotorID = 61;
-    public static final int kFollowMotorID = 71;
+    public static final int kLeadMotorID = 10;
+    public static final int kFollowMotorID = 11;
     public static final double kElevatorP = 0.027;
     public static final double kElevatorI = 0.0;
     public static final double kElevatorD = 0.0;
@@ -199,5 +219,10 @@ public final class Constants {
     public static final double kElevatorMinOutput = -1.0;
     public static final double kElevatorMaxOutput = 1.0;
     public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
+    public static final double L1 = 0;
+    public static final double L2 = 0;
+    public static final double L3 = 0;
+    public static final double L4 = 0;
+    public static final double SOURCE = 0;
   }
 }  
