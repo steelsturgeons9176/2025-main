@@ -8,12 +8,15 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ClimberDownCommand;
 import frc.robot.commands.ClimberUpCommand;
+import frc.robot.commands.ElevatorToPosition;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorIO;
 import frc.robot.subsystems.Elevator.ElevatorIOSparkMax;
+import frc.robot.subsystems.ElevatorSubsystem.elevatorPositions;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -31,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -45,18 +49,15 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final ClimberSubsystem m_climber = new ClimberSubsystem();
+  public final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   //private final Elevator elevator;
-  private final double PROCESSOR_HEIGHT = 0;
-  private final double SOURCE_HEIGHT = 8.75;
-  private final double L1_HEIGHT = 3;
-  private final double L2_HEIGHT = 4.75;
-  private final double L3_HEIGHT = 21.5;
-  private final double L4_HEIGHT = 52.5;
-  private final double TOP_ALGAE_HEIGHT = 34.5;
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
+  private final CommandPS4Controller m_manipController =
+  new CommandPS4Controller(1);
 
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
@@ -196,21 +197,17 @@ public class RobotContainer {
       //m_driverController.options().whileTrue(manualLift);
     } else
     {
-      //m_driverController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      //m_driverController.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      //m_driverController.start().whileTrue(Commands.none());
-      //m_driverController.back().whileTrue(Commands.none());
-      //m_driverController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      //m_driverController.rightBumper().onTrue(Commands.none());
-     // m_driverController.pov(0).onTrue(Commands.none());
-     // m_driverController.pov(180).onTrue(Commands.none());
-     // m_driverController.povDown().onTrue(Commands.none());
-     // m_driverController.povLeft().onTrue(Commands.none());
-     m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
+      
+      m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
       m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
-     // m_driverController.circle().onTrue(Commands.none());
-     // m_driverController.triangle().onTrue(Commands.none());
-     // m_driverController.square().onTrue(Commands.none());
+      m_manipController.cross().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1)).onFalse(
+        new ElevatorToPosition(m_elevator, elevatorPositions.L1));
+      m_manipController.square().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1)).onFalse(
+        new ElevatorToPosition(m_elevator, elevatorPositions.L2));  
+      m_manipController.triangle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1)).onFalse(
+        new ElevatorToPosition(m_elevator, elevatorPositions.L3));
+      m_manipController.circle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1)).onFalse(
+      new ElevatorToPosition(m_elevator, elevatorPositions.L4));
       m_driverController.options().whileTrue(Commands.none());
     }
 

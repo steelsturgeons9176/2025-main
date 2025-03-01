@@ -6,9 +6,11 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -29,11 +31,20 @@ public class ElevatorIOSparkMax implements ElevatorIO {
     // Initialize the encoder for main
     encoder = leadMotor.getEncoder();
 
+    leadMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    followMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+
     leadMotorConfig.closedLoop.p(ElevatorConstants.kElevatorP);
     leadMotorConfig.closedLoop.i(ElevatorConstants.kElevatorI);
     leadMotorConfig.closedLoop.d(ElevatorConstants.kElevatorD);
     leadMotorConfig.closedLoop.velocityFF(ElevatorConstants.kElevatorFF);
     leadMotorConfig.closedLoop.outputRange(ElevatorConstants.kElevatorMinOutput, ElevatorConstants.kElevatorMaxOutput);
+
+    followMotorConfig.closedLoop.p(ElevatorConstants.kElevatorP);
+    followMotorConfig.closedLoop.i(ElevatorConstants.kElevatorI);
+    followMotorConfig.closedLoop.d(ElevatorConstants.kElevatorD);
+    followMotorConfig.closedLoop.velocityFF(ElevatorConstants.kElevatorFF);
+    followMotorConfig.closedLoop.outputRange(ElevatorConstants.kElevatorMinOutput, ElevatorConstants.kElevatorMaxOutput);
 
     leadMotorConfig.idleMode(ElevatorConstants.kElevatorIdleMode);
     followMotorConfig.idleMode(ElevatorConstants.kElevatorIdleMode);
