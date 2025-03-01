@@ -111,9 +111,9 @@ public final class Constants {
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
     public static final int kDrivingMotorCurrentLimit = 30; // amps
-    public static final int kTurningMotorCurrentLimit = 15; // amps 
+    public static final int kTurningMotorCurrentLimit = 15; // amps
 
-    
+
   }
 
   public static final class AutoConstants {
@@ -137,7 +137,7 @@ public final class Constants {
     public static final int kFrontRightCanCoderCanId = 0;
     public static final int kFreeSpeedRpm = 1;
   }
- // will add once we have our krakens positioned 
+ // will add once we have our krakens positioned
   public static final class KrakenMotorConstants {
     public static final int kFrontLeftDrivingCanId = 21;
     public static final int kFrontRightDrivingCanId = 0;
@@ -151,7 +151,7 @@ public final class Constants {
     public static final double loopPeriodSecs = 0.02;
   }
 
-// Changed ArmConstants to ClimbArmConstants for when we get the arm on the elevator 
+// Changed ArmConstants to ClimbArmConstants for when we get the arm on the elevator
 
   public static final class ClimbArmConstants {
     public static final int ARM_MOTOR_ID = 6;
@@ -173,6 +173,7 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
     public static final double TURN_CONSTANT    = 6;
     public static final double DEADBAND        = 0.1;
     public static final double LEFT_Y_DEADBAND = 0.1;
@@ -200,4 +201,4 @@ public final class Constants {
     public static final double kElevatorMaxOutput = 1.0;
     public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
   }
-}  
+}
