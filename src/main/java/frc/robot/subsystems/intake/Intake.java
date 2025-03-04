@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
-  IntakeIO io;
-  IntakeIO.IntakeIOInputsAutoLogged inputs = new IntakeIO.IntakeIOInputsAutoLogged();
+  private final IntakeIO io;
+  private final IntakeIO.IntakeIOInputsAutoLogged inputs = new IntakeIO.IntakeIOInputsAutoLogged();
 
   public Intake(IntakeIO io) {
     this.io = io;
