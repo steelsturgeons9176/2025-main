@@ -216,13 +216,13 @@ public final class Constants {
     public static final double kElevatorI = 0.0;
     public static final double kElevatorD = 0.0;
     public static final double kElevatorFF = 0.0085;
-    public static final double kElevatorMinOutput = -1.0;
-    public static final double kElevatorMaxOutput = 1.0;
+    public static final double kElevatorMinOutput = 0;
+    public static final double kElevatorMaxOutput = 70;
     public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
-    public static final double L1 = 0;
-    public static final double L2 = 0;
-    public static final double L3 = 0;
-    public static final double L4 = 0;
+    public static final double L1 = 6;
+    public static final double L2 = 6.75;
+    public static final double L3 = 12.5;
+    public static final double L4 = 62;
     public static final double SOURCE = 0;
   }
 }  

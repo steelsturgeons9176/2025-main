@@ -2,33 +2,30 @@ package frc.robot.subsystems;
 
 import java.util.EnumMap;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
-//import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.hardware.ParentDevice;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 
-
-public class ElevatorSubsystem extends SubsystemBase {
-    public static final double reduction = 20.0/5.5;
+public class ElevatorSubsystemNeo extends SubsystemBase {
     public enum elevatorPositions{
         L1, 
         L2, 
@@ -37,25 +34,17 @@ public class ElevatorSubsystem extends SubsystemBase {
         SOURCE
     }
 
-    private final TalonFX m_elevatorLead;
-    private final TalonFX m_elevatorFollow;
+    private final SparkMax m_armLead;
+    private final SparkMax m_armFollow;
 
-    //private final PositionTorqueCurrentFOC torqueCurrentRequest = new PositionTorqueCurrentFOC(0).withUpdateFreqHz(0);
-    private final PositionVoltage positionVoltageRequest = new PositionVoltage(0).withUpdateFreqHz(0);
+    private SparkMaxConfig m_leadConfig;
+    private SparkMaxConfig m_followConfig;
 
-    private final StatusSignal<Angle> position;
-    private final StatusSignal<AngularVelocity> velocity;
-
-    private TalonFXConfiguration m_leadConfig;
-    
-    private double feedforward;
-
- //   private final RelativeEncoder ElevatorEncoder;
- 
+    private final RelativeEncoder ElevatorEncoder;
 
     //private final PIDController m_AbsPidController = new PIDController(1, 0.0, 0.0);
 
-    
+    private final SparkClosedLoopController m_pidController;
 
     private double currentGoal = 0.125f;
 
@@ -98,9 +87,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     //DoublePublisher kG_gain = NetworkTableInstance.getDefault()
     //.getDoubleTopic("MyStates", ).publish();
 
-    public ElevatorSubsystem () {
-
-        
+    public ElevatorSubsystemNeo () {
         m_timer = new Timer();
         m_timer.start();
         m_timer.reset();
@@ -112,40 +99,46 @@ public class ElevatorSubsystem extends SubsystemBase {
         mapAbs.put(elevatorPositions.SOURCE, ElevatorConstants.SOURCE);
       //  mapAbs.put(armPositions.INTAKE, ArmConstants.INTAKE);
       //  mapAbs.put(armPositions.POOP, ArmConstants.POOP);
-        
 
+        m_armLead = new SparkMax(ElevatorConstants.kLeadMotorID, MotorType.kBrushless);
+        m_armFollow = new SparkMax(ElevatorConstants.kFollowMotorID, MotorType.kBrushless);
 
-      m_elevatorLead = new TalonFX(ElevatorConstants.kLeadMotorID);
-        m_elevatorFollow = new TalonFX(ElevatorConstants.kFollowMotorID);
-        m_elevatorFollow.setControl(new Follower(m_elevatorLead.getDeviceID(), true));
-        
+        m_pidController = m_armLead.getClosedLoopController();
 
-        m_leadConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        m_leadConfig.Slot0 = new Slot0Configs().withKP(0).withKI(0).withKD(0);
-        m_leadConfig.Feedback.SensorToMechanismRatio = reduction;
-        m_leadConfig.Voltage.PeakForwardVoltage = 8;
-        m_leadConfig.Voltage.PeakReverseVoltage = -8;
-        //m_leadConfig.TorqueCurrent.PeakForwardTorqueCurrent = 40.0;
-      //  m_leadConfig.TorqueCurrent.PeakReverseTorqueCurrent = -40.0;
-        m_leadConfig.CurrentLimits.StatorCurrentLimit = 40.0;
-        m_leadConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        m_leadConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        
-        m_elevatorLead.getConfigurator().apply(m_leadConfig, 0.25);
+        ElevatorEncoder = m_armLead.getEncoder();
 
-        position = m_elevatorLead.getPosition();
-        velocity = m_elevatorLead.getVelocity();
+        m_leadConfig = new SparkMaxConfig();
+        m_followConfig = new SparkMaxConfig();
 
-        ParentDevice.optimizeBusUtilizationForAll(m_elevatorLead, m_elevatorFollow);
-
+        m_leadConfig.inverted(true);
+        m_followConfig.inverted(false);
+        //m_followConfig.follow(m_armLead);
+        m_leadConfig.smartCurrentLimit(40);
+        m_followConfig.smartCurrentLimit(30);
+        //m_pidController = m_armLead.getClosedLoopController();
 
         p = kP;
         i = kI;
         d = kD;
+
+        m_leadConfig.closedLoop.pid(kP, kI, kD);
+
+       // TODO
+        m_leadConfig.closedLoop.outputRange(-.80, .80);
+
+        m_leadConfig.idleMode(ElevatorConstants.kElevatorIdleMode);
+        
+        m_followConfig.idleMode(ElevatorConstants.kElevatorIdleMode);
+
         //m_pidController.enableContinuousInput(0, 1);
         profile =
         new TrapezoidProfile(
-            new TrapezoidProfile.Constraints(1.0, 4.0));
+            new TrapezoidProfile.Constraints(1000, 750));
+
+        m_leadConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+       
+        m_armLead.configure(m_leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_armFollow.configure(m_followConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SmartDashboard.putNumber("Arm/goal", currentGoal);
         SmartDashboard.putNumber("Arm/KP", kP);
@@ -158,16 +151,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Arm/KA", kA);
 
         SmartDashboard.putNumber("Arm/KSTuner", kS_tuner);
+
+        //setDefaultCommand(new ArmToPosition(this, armPositions.STOWED));
     }
 
     @Override
     public void periodic() {
         //SmartDashboard.putNumber("Arm Relative Enc", m_armRight.getEncoder().getPosition());
-        SmartDashboard.putNumber("Arm/ArmABS Absolute", position.getValueAsDouble());
+        SmartDashboard.putNumber("Arm/ArmABS Absolute", ElevatorEncoder.getPosition());
         //SmartDashboard.putNumber("Arm/RightSide Encoder" , m_armFollow.getAlternateEncoder().getPosition());
         //SmartDashboard.putNumber("Arm oCurrent", m_armRight.getOutputCurrent());
         //SmartDashboard.putNumber("Arm Motor Speed", m_speed);
-        SmartDashboard.putNumber("Arm/LeftMotor", m_elevatorLead.getSupplyCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Arm/LeftMotor", m_armLead.getOutputCurrent());
         //SmartDashboard.putNumber("Right Motor", m_armLeft.getOutputCurrent());
 
         if(isTuning)
@@ -175,7 +170,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             tuneNumbers();
         }
 
-        m_speed = velocity.getValueAsDouble();
+    
+
+        m_speed = m_armLead.getEncoder().getVelocity();
         SmartDashboard.putNumber("setpointState", setpointState.position);
         if(profile.isFinished(m_timer.get() + .06))
         {
@@ -205,10 +202,16 @@ public class ElevatorSubsystem extends SubsystemBase {
                    0.0));
                 
         }
-        feedforward = ff.calculate(setpointState.position, setpointState.velocity);
-        m_elevatorLead.setControl(positionVoltageRequest.withPosition(setpointState.position).withFeedForward(feedforward));
-        // Once given pro we can chang positionVoltagerequest to torqueCurrentRequest
+
+        m_pidController.setReference(setpointState.position, ControlType.kPosition,ClosedLoopSlot.kSlot0,
+        ff.calculate(setpointState.position * 2 * Math.PI, setpointState.velocity * 2 * Math.PI ));
+        //m_AbsPidController.
+
+        //SmartDashboard.putNumber("ff", ff.calculate(setpointState.position, setpointState.velocity));
+
     }
+
+
 
 
     private void updateMotionProfile() {
@@ -228,32 +231,38 @@ public class ElevatorSubsystem extends SubsystemBase {
       }
 
     public boolean raiseArmAbs(elevatorPositions position){
-    
+        if (((ElevatorEncoder.getPosition() < ArmConstants.kMinHeightAbs) && (position == elevatorPositions.L1)) ||
+            ((ElevatorEncoder.getPosition() > ArmConstants.kMaxHeightAbs) && (position == elevatorPositions.L4))) {
+            //m_armRight.set(0);
+            //return true;
+        }
         
         double ref = mapAbs.get(position);
         currentGoal = ref;
         updateMotionProfile();
+
+
+       
         return false;
     }
 
     public void updatePID() 
     {
-        m_leadConfig.Slot0.kP = kP;
-        m_leadConfig.Slot0.kI = kI;
-        m_leadConfig.Slot0.kD = kD;
+        m_leadConfig.closedLoop.pid(kP, kI, kD);
+        
         p = kP;
         i = kI;
         d = kD;
     }
 
     public boolean atPosition(){
-        double currentEncoderPosition = position.getValueAsDouble();
+        double currentEncoderPosition = ElevatorEncoder.getPosition();
         return (Math.abs(currentEncoderPosition - currentGoal) < Constants.ArmConstants.kAllowedErrAbs);
     }
 
     public void noArmPower()
     {
-        m_elevatorLead.set(0);
+        m_armLead.set(0);
     }
 
     public void tuneNumbers()
@@ -262,7 +271,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         kP = SmartDashboard.getNumber("Arm/KP", kP);
         kI = SmartDashboard.getNumber("Arm/KI", kI);
         kD = SmartDashboard.getNumber("Arm/KD", kD);
-            
+
         kS = SmartDashboard.getNumber("Arm/KS", kS); 
         kG = SmartDashboard.getNumber("Arm/KG", kG);
         kV = SmartDashboard.getNumber("Arm/KV", kV);
