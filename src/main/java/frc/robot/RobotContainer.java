@@ -13,9 +13,6 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorIO;
-import frc.robot.subsystems.Elevator.ElevatorIOSparkMax;
 import frc.robot.subsystems.ElevatorSubsystem.elevatorPositions;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
@@ -200,15 +197,13 @@ public class RobotContainer {
 
       m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
       m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
-
-      m_manipController.cross().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
-      m_manipController.square().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
-      m_manipController.triangle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L3_HEIGHT));
-      m_manipController.circle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT));
-
-      m_driverController.options().whileTrue(Commands.none());
+      m_manipController.cross().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1));
+      m_manipController.square().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2));
+      m_manipController.triangle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L3));
+      m_manipController.circle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4));
     }
-  }
+
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
