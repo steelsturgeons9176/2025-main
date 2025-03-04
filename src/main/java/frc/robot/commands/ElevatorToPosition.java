@@ -6,7 +6,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class ElevatorToPosition extends Command {
     private ElevatorSubsystem m_elevator;
     private ElevatorSubsystem.elevatorPositions m_tarPosition;
-    
+
 
     public ElevatorToPosition(ElevatorSubsystem elevator, ElevatorSubsystem.elevatorPositions pos){
         m_elevator = elevator;
@@ -32,6 +32,6 @@ public class ElevatorToPosition extends Command {
 
     @Override
     public void end(boolean isInterrupted){
-        
+
     }
 }

@@ -3,12 +3,15 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.WristConstants;
+
 
 // import frc.robot.subsystems.intake.IntakeIO.IntakeIOInputs;
 
@@ -24,16 +27,20 @@ public class IntakeIOSparkMax implements IntakeIO {
 
   RelativeEncoder wristEncoder;
 
+  SparkClosedLoopController m_pidController;
+
   public IntakeIOSparkMax() {
     // find actual motor IDs
     algaeMotor1 = new SparkMax(ArmConstants.ARM_ALGAE_MOTOR1_ID, MotorType.kBrushless);
     algaeMotor2 = new SparkMax(ArmConstants.ARM_ALGAE_MOTOR2_ID, MotorType.kBrushless);
     coralIntake = new SparkMax(ArmConstants.ARM_CORAL_MOTOR_ID, MotorType.kBrushless);
-    coralWrist = new SparkMax(ArmConstants.ARM_WRIST_MOTOR_ID, MotorType.kBrushless); 
+    coralWrist = new SparkMax(ArmConstants.ARM_WRIST_MOTOR_ID, MotorType.kBrushless);
 
     algeaMotorConfig = new SparkMaxConfig();
     coralIntakeConfig = new SparkMaxConfig();
     coralWristConfig = new SparkMaxConfig();
+
+    m_pidController = coralWrist.getClosedLoopController();
 
 
     algeaMotorConfig
@@ -54,7 +61,8 @@ public class IntakeIOSparkMax implements IntakeIO {
       .p(0.55)
       .i(0)
       .d(0.0)
-      .velocityFF(0.00375);
+      .velocityFF(0.00375)
+      .outputRange(WristConstants.K_WRIST_MIN_OUTPUT, WristConstants.K_WRIST_MAX_OUTPUT);
 
     // ask about gear ratios for all motors
     wristEncoder = coralWrist.getEncoder();
@@ -79,7 +87,7 @@ public class IntakeIOSparkMax implements IntakeIO {
   public void setAlgaeVoltage(double voltage) {
     algaeMotor1.setVoltage(voltage);
     algaeMotor2.setVoltage(voltage);
-    // instead of changing it to inverted we can change the voltage to negative 
+    // instead of changing it to inverted we can change the voltage to negative
   }
 
   @Override
@@ -93,9 +101,10 @@ public class IntakeIOSparkMax implements IntakeIO {
   }
 
   @Override
-  public void wristAngle(double position) {
+  public void wristAngle(Intake.wristPositions position) {
     // System.out.println("Wrist position: " + getWristPosition());
-    coralWrist.getClosedLoopController().setReference(position, SparkMax.ControlType.kPosition);
+    double ref = Intake.wristMap.get(position);
+    m_pidController.setReference(ref, SparkMax.ControlType.kPosition);
   }
 
   @Override

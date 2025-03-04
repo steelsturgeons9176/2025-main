@@ -44,11 +44,11 @@ import frc.robot.subsystems.Elevator.Elevator;
 
 public class ElevatorSubsystem extends SubsystemBase {
     public enum elevatorPositions{
-        L1, 
-        L2, 
-        L3,
-        L4,
-        SOURCE
+        L1_HEIGHT,
+        L2_HEIGHT,
+        L3_HEIGHT,
+        L4_HEIGHT,
+        SOURCE_HEIGHT
     }
 
     private final SparkMax m_armLead;
@@ -67,7 +67,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     DoubleSubscriber currentGoalSub;
 
-   
+
     private Timer m_timer;
 
     private double kS_tuner = 0;
@@ -76,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double kI = 0;
     private double kD = 0.0;
 
-  
+
 
     private double kG = .19;
     private double kS = .4;
@@ -122,11 +122,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_timer.start();
         m_timer.reset();
 
-        mapAbs.put(elevatorPositions.L1, ElevatorConstants.L1);
-        mapAbs.put(elevatorPositions.L2, ElevatorConstants.L2);
-        mapAbs.put(elevatorPositions.L3, ElevatorConstants.L3);
-        mapAbs.put(elevatorPositions.L4, ElevatorConstants.L4);
-        mapAbs.put(elevatorPositions.SOURCE, ElevatorConstants.SOURCE);
+        mapAbs.put(elevatorPositions.L1_HEIGHT, ElevatorConstants.L1_HEIGHT);
+        mapAbs.put(elevatorPositions.L2_HEIGHT, ElevatorConstants.L2_HEIGHT);
+        mapAbs.put(elevatorPositions.L3_HEIGHT, ElevatorConstants.L3_HEIGHT);
+        mapAbs.put(elevatorPositions.L4_HEIGHT, ElevatorConstants.L4_HEIGHT);
+        mapAbs.put(elevatorPositions.SOURCE_HEIGHT, ElevatorConstants.SOURCE_HEIGHT);
       //  mapAbs.put(armPositions.INTAKE, ArmConstants.INTAKE);
       //  mapAbs.put(armPositions.POOP, ArmConstants.POOP);
 
@@ -152,7 +152,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_leadConfig.closedLoop.outputRange(ElevatorConstants.kElevatorMinOutput, ElevatorConstants.kElevatorMaxOutput);
 
         m_leadConfig.idleMode(ElevatorConstants.kElevatorIdleMode);
-        
+
         m_followConfig.idleMode(ElevatorConstants.kElevatorIdleMode);
 
         //m_pidController.enableContinuousInput(0, 1);
@@ -162,17 +162,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         m_leadConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
        // m_followConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-      
+
        // m_followConfig.closedLoop.outputRange(ArmConstants.kArmMinOutput, ArmConstants.kArmMaxOutput);
      //   m_leadConfig.closedLoop.velocityFF(ElevatorConstants.kElevatorFF);
        // m_followConfig.closedLoop.velocityFF(ElevatorConstants.kElevatorFF);
-      
+
       //  m_followConfig.closedLoop.pid(kP, kI, kD);
 
         //m_leadConfig.closedLoop.setPositionPIDWrappingEnabled(true);
         //m_pidController.setPositionPIDWrappingMinInput(0.0f);
         //m_pidController.setPositionPIDWrappingMaxInput(1.0f);
-        
+
         m_armLead.configure(m_leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         m_armFollow.configure(m_followConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -205,7 +205,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             tuneNumbers();
         }
 
-    
+
 
         m_speed = m_armLead.getEncoder().getVelocity();
         SmartDashboard.putNumber("setpointState", setpointState.position);
@@ -235,7 +235,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                       Constants.ArmConstants.kMinHeightAbs,
                       Constants.ArmConstants.kMaxHeightAbs),
                    0.0));
-                
+
         }
 
         m_pidController.setReference(setpointState.position, ControlType.kPosition,ClosedLoopSlot.kSlot0,
@@ -254,12 +254,12 @@ public class ElevatorSubsystem extends SubsystemBase {
       }
 
     public boolean raiseArmAbs(elevatorPositions position){
-        if (((ElevatorEncoder.getPosition() < ArmConstants.kMinHeightAbs) && (position == elevatorPositions.L1)) ||
-            ((ElevatorEncoder.getPosition() > ArmConstants.kMaxHeightAbs) && (position == elevatorPositions.L4))) {
+        if (((ElevatorEncoder.getPosition() < ArmConstants.kMinHeightAbs) && (position == elevatorPositions.L1_HEIGHT)) ||
+            ((ElevatorEncoder.getPosition() > ArmConstants.kMaxHeightAbs) && (position == elevatorPositions.L4_HEIGHT))) {
             //m_armRight.set(0);
             //return true;
         }
-        
+
         double ref = mapAbs.get(position);
         currentGoal = ref;
         updateMotionProfile();
@@ -271,10 +271,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         //m_pidController.setReference(setpointState.position, ControlType.kPosition);
 
         //m_armRight.
-            
+
         //SmartDashboard.putNumber("Arm Abs Target Pos", ref);
  //       m_armRight.set(pidOut);
-        
+
         //if(atPosition(position))
        // {
        //     return true;
@@ -282,10 +282,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         return false;
     }
 
-    public void updatePID() 
+    public void updatePID()
     {
         m_leadConfig.closedLoop.pid(kP, kI, kD);
-        
+
         p = kP;
         i = kI;
         d = kD;
@@ -308,7 +308,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         kI = SmartDashboard.getNumber("Arm/KI", kI);
         kD = SmartDashboard.getNumber("Arm/KD", kD);
 
-        kS = SmartDashboard.getNumber("Arm/KS", kS); 
+        kS = SmartDashboard.getNumber("Arm/KS", kS);
         kG = SmartDashboard.getNumber("Arm/KG", kG);
         kV = SmartDashboard.getNumber("Arm/KV", kV);
         kA = SmartDashboard.getNumber("Arm/KA", kA);

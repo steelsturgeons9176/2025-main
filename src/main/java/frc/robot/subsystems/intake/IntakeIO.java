@@ -41,7 +41,7 @@ public interface IntakeIO {
 
   public default void adjustAngle(double angleRadians) {}
 
-  public default void wristAngle(double position) {}
+  public default void wristAngle(Intake.wristPositions position) {}
 
   public default double getWristPosition() {
     return 0;

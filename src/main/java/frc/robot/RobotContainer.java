@@ -51,7 +51,7 @@ public class RobotContainer {
   public final ClimberSubsystem m_climber = new ClimberSubsystem();
   public final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   //private final Elevator elevator;
-  
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
@@ -197,20 +197,17 @@ public class RobotContainer {
       //m_driverController.options().whileTrue(manualLift);
     } else
     {
-      
+
       m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
       m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
-      m_manipController.cross().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1)).onFalse(
-        new ElevatorToPosition(m_elevator, elevatorPositions.L1));
-      m_manipController.square().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1)).onFalse(
-        new ElevatorToPosition(m_elevator, elevatorPositions.L2));  
-      m_manipController.triangle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1)).onFalse(
-        new ElevatorToPosition(m_elevator, elevatorPositions.L3));
-      m_manipController.circle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1)).onFalse(
-      new ElevatorToPosition(m_elevator, elevatorPositions.L4));
+
+      m_manipController.cross().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
+      m_manipController.square().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
+      m_manipController.triangle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L3_HEIGHT));
+      m_manipController.circle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT));
+
       m_driverController.options().whileTrue(Commands.none());
     }
-
   }
 
   /**

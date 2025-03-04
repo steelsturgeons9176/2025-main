@@ -180,6 +180,19 @@ public final class Constants {
     public static final double RIGHT_X_DEADBAND = 0.1;
   }
 
+  public static class WristConstants {
+    public static final double WRIST_CONVERSION_FACTOR = 243 / 9;
+    public static final double HOLD_ANGLE = 0; // TODO:
+    public static final double L1_ANGLE = 0.35 * WRIST_CONVERSION_FACTOR;
+    public static final double L2_ANGLE = 0.255 * WRIST_CONVERSION_FACTOR;
+    public static final double L3_ANGLE = 0.27 * WRIST_CONVERSION_FACTOR;
+    public static final double L4_ANGLE = 0.335 * WRIST_CONVERSION_FACTOR;
+    public static final double SOURCE_ANGLE = 0; // TODO:
+    public static final double K_WRIST_MIN_OUTPUT = -.1;
+    public static final double K_WRIST_MAX_OUTPUT = .1;
+  }
+
+
   public static final class ArmConstants {
     public static final int ARM_MOTOR_ID = 6;
     public static final int ARM_MOTOR_CURRENT_LIMIT = 60;
@@ -220,10 +233,10 @@ public final class Constants {
     public static final double kElevatorMinOutput = -1.0;
     public static final double kElevatorMaxOutput = 1.0;
     public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
-    public static final double L1 = 0;
-    public static final double L2 = 0;
-    public static final double L3 = 0;
-    public static final double L4 = 0;
-    public static final double SOURCE = 0;
+    public static final double L1_HEIGHT = 0;
+    public static final double L2_HEIGHT = 0;
+    public static final double L3_HEIGHT = 0;
+    public static final double L4_HEIGHT = 0;
+    public static final double SOURCE_HEIGHT = 0;
   }
 }
