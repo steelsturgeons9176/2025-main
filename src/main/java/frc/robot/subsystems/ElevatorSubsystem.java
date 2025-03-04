@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.EnumMap;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -46,6 +47,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final StatusSignal<Angle> position;
     private final StatusSignal<AngularVelocity> velocity;
 
+    private double pos;
+
     private TalonFXConfiguration m_leadConfig;
     
     private double feedforward;
@@ -66,14 +69,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double kS_tuner = 0;
 
-    private double kP = 1;
+    private double kP = 10; //10
     private double kI = 0;
     private double kD = 0.0;
 
   
 
-    private double kG = .19;
-    private double kS = .4;
+    private double kG = .2;
+    private double kS = .3;
     private double kV = 0;
     private double kA = 0;
 
@@ -100,7 +103,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public ElevatorSubsystem () {
 
-        
+        m_leadConfig = new TalonFXConfiguration();
         m_timer = new Timer();
         m_timer.start();
         m_timer.reset();
@@ -121,23 +124,36 @@ public class ElevatorSubsystem extends SubsystemBase {
         
 
         m_leadConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        m_leadConfig.Slot0 = new Slot0Configs().withKP(0).withKI(0).withKD(0);
+        m_leadConfig.Slot0 = new Slot0Configs().withKP(kP).withKI(0).withKD(0);
         m_leadConfig.Feedback.SensorToMechanismRatio = reduction;
-        m_leadConfig.Voltage.PeakForwardVoltage = 8;
+        m_leadConfig.Voltage.PeakForwardVoltage = 12;
         m_leadConfig.Voltage.PeakReverseVoltage = -8;
         //m_leadConfig.TorqueCurrent.PeakForwardTorqueCurrent = 40.0;
       //  m_leadConfig.TorqueCurrent.PeakReverseTorqueCurrent = -40.0;
         m_leadConfig.CurrentLimits.StatorCurrentLimit = 40.0;
+        m_leadConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
+    
         m_leadConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         m_leadConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        //m_leadConfig.
         
         m_elevatorLead.getConfigurator().apply(m_leadConfig, 0.25);
-
+        m_leadConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        m_elevatorFollow.getConfigurator().apply(m_leadConfig,0.25);
         position = m_elevatorLead.getPosition();
         velocity = m_elevatorLead.getVelocity();
 
+        
+
+        BaseStatusSignal.setUpdateFrequencyForAll(
+        50.0,
+        position,
+        velocity);
+
         ParentDevice.optimizeBusUtilizationForAll(m_elevatorLead, m_elevatorFollow);
 
+        
+        
 
         p = kP;
         i = kI;
@@ -145,7 +161,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         //m_pidController.enableContinuousInput(0, 1);
         profile =
         new TrapezoidProfile(
-            new TrapezoidProfile.Constraints(1.0, 4.0));
+            new TrapezoidProfile.Constraints(4.0, 2.0));
 
         SmartDashboard.putNumber("Arm/goal", currentGoal);
         SmartDashboard.putNumber("Arm/KP", kP);
@@ -162,8 +178,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        pos = m_elevatorLead.getPosition().getValueAsDouble();
         //SmartDashboard.putNumber("Arm Relative Enc", m_armRight.getEncoder().getPosition());
-        SmartDashboard.putNumber("Arm/ArmABS Absolute", position.getValueAsDouble());
+        SmartDashboard.putNumber("Arm/ArmABS Absolute", pos);
         //SmartDashboard.putNumber("Arm/RightSide Encoder" , m_armFollow.getAlternateEncoder().getPosition());
         //SmartDashboard.putNumber("Arm oCurrent", m_armRight.getOutputCurrent());
         //SmartDashboard.putNumber("Arm Motor Speed", m_speed);
@@ -176,7 +193,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         }
 
         m_speed = velocity.getValueAsDouble();
-        SmartDashboard.putNumber("setpointState", setpointState.position);
+        SmartDashboard.putNumber("Arm/setpointState", setpointState.position);
         if(profile.isFinished(m_timer.get() + .06))
         {
             setpointState = new TrapezoidProfile.State(currentGoal, 0);

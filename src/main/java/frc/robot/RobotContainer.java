@@ -197,13 +197,13 @@ public class RobotContainer {
       
       m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
       m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
-     // m_manipController.cross().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1));
+      m_manipController.cross().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1));
       m_manipController.square().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2));
       m_manipController.triangle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L3));
-     //m_manipController.circle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4));
+      m_manipController.circle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4));
     }
 
-  }
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
