@@ -696,4 +696,10 @@ public class SwerveSubsystem extends SubsystemBase
   {
     return swerveDrive;
   }
+
+  public void visionReef(Supplier<Pose2d> visionPos) {
+    swerveDrive.drive(new Translation2d(visionPos.get().getX()*swerveDrive.getMaximumChassisVelocity(),visionPos.get().getY()*swerveDrive.getMaximumChassisVelocity()),
+    visionPos.get().getRotation().getRotations()*swerveDrive.getMaximumChassisAngularVelocity(), false, false);
+
+  }
 }

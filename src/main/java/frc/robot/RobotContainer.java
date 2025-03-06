@@ -10,12 +10,22 @@ import frc.robot.commands.ClimberDownCommand;
 import frc.robot.commands.ClimberUpCommand;
 import frc.robot.commands.ElevatorToPosition;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.IntakeCoral;
+import frc.robot.commands.IntakeScoreCoral;
+import frc.robot.commands.WristScoreHigh;
+import frc.robot.commands.WristScoreLow;
+import frc.robot.commands.WristScoreMid;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.elevatorPositions;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOSparkMax;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import swervelib.SwerveInputStream;
+
 
 import java.io.File;
 
@@ -47,14 +57,17 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final ClimberSubsystem m_climber = new ClimberSubsystem();
   public final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+  public final IntakeIOSparkMax m_intakeIO = new IntakeIOSparkMax();
+  public final Intake m_intake = new Intake(m_intakeIO);
+  public final VisionSubsystem m_vision = new VisionSubsystem();
   //private final Elevator elevator;
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandPS4Controller m_driverController =
       new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
-  private final CommandPS4Controller m_manipController =
-  new CommandPS4Controller(1);
+  private final CommandJoystick m_manipController =
+  new CommandJoystick(1);
 
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
@@ -197,14 +210,24 @@ public class RobotContainer {
 
       m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
       m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
-      m_manipController.cross().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1));
-      m_manipController.square().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2));
-      m_manipController.triangle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L3));
-      m_manipController.circle().onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4));
+      m_driverController.triangle().whileTrue(new RunCommand(
+        () -> drivebase.visionReef(m_vision.align_left_branch_supplier()), drivebase));
+
+      m_manipController.button(1).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
+      m_manipController.button(3).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
+      m_manipController.button(4).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L3_HEIGHT));
+      m_manipController.button(2).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT));
+      m_manipController.povLeft().onTrue(new WristScoreMid(m_intake));
+      m_manipController.povDown().onTrue(new WristScoreLow(m_intake));
+      m_manipController.povRight().onTrue(new WristScoreHigh(m_intake));
+      m_manipController.povUp().onTrue(new WristScoreMid(m_intake));
+      m_manipController.button(6).onTrue(new IntakeCoral(m_intake));
+      m_manipController.axisGreaterThan(3, .2).whileTrue(new IntakeScoreCoral(m_intake));
+
     }
 
   
-
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
