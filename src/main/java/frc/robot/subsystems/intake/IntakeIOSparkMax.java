@@ -86,8 +86,8 @@ public class IntakeIOSparkMax implements IntakeIO {
   @Override
   public void setAlgaeVoltage(double voltage) {
     algaeMotor1.setVoltage(voltage);
+    // algeaMotor2 is already inverted so we don't need to make it negative
     algaeMotor2.setVoltage(voltage);
-    // instead of changing it to inverted we can change the voltage to negative
   }
 
   @Override
