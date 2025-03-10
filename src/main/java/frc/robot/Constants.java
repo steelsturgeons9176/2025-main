@@ -233,10 +233,10 @@ public final class Constants {
     public static final double kElevatorMinOutput = 0;
     public static final double kElevatorMaxOutput = 70;
     public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
-    public static final double L1 = 0.125;
-    public static final double L2 = 6.75;
-    public static final double L3 = 12.5;
-    public static final double L4 = 19;
+    public static final double L1_HEIGHT = 0.125;
+    public static final double L2_HEIGHT = 6.75;
+    public static final double L3_HEIGHT = 12.5;
+    public static final double L4_HEIGHT = 19;
     public static final double SOURCE = 0;
   }
 }
