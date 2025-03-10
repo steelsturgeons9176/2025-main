@@ -108,11 +108,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_timer.start();
         m_timer.reset();
 
-        mapAbs.put(elevatorPositions.L1_HEIGHT, ElevatorConstants.L1_HEIGHT);
-        mapAbs.put(elevatorPositions.L2_HEIGHT, ElevatorConstants.L2_HEIGHT);
-        mapAbs.put(elevatorPositions.L3_HEIGHT, ElevatorConstants.L3_HEIGHT);
-        mapAbs.put(elevatorPositions.L4_HEIGHT, ElevatorConstants.L4_HEIGHT);
-        mapAbs.put(elevatorPositions.SOURCE_HEIGHT, ElevatorConstants.SOURCE_HEIGHT);
+        mapAbs.put(elevatorPositions.L1_HEIGHT, ElevatorConstants.L1);
+        mapAbs.put(elevatorPositions.L2_HEIGHT, ElevatorConstants.L2);
+        mapAbs.put(elevatorPositions.L3_HEIGHT, ElevatorConstants.L3);
+        mapAbs.put(elevatorPositions.L4_HEIGHT, ElevatorConstants.L4);
+        mapAbs.put(elevatorPositions.SOURCE_HEIGHT, ElevatorConstants.SOURCE);
       //  mapAbs.put(armPositions.INTAKE, ArmConstants.INTAKE);
       //  mapAbs.put(armPositions.POOP, ArmConstants.POOP);
 
@@ -219,8 +219,8 @@ public class ElevatorSubsystem extends SubsystemBase {
                       currentGoal,
                       Constants.ElevatorConstants.kElevatorMinOutput,
                       Constants.ElevatorConstants.kElevatorMaxOutput),
-                      0.0));
-        }
+                      0.0)); }
+                      
         // Once given pro we can chang positionVoltagerequest to torqueCurrentRequest
         feedforward = ff.calculate(setpointState.position, setpointState.velocity);
         m_elevatorLead.setControl(positionVoltageRequest.withPosition(setpointState.position).withFeedForward(feedforward));
