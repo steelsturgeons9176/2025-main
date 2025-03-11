@@ -14,7 +14,7 @@ public class IntakeAlgea extends Command{
 
   @Override
   public void initialize(){
-      m_intake.setAlgaeVoltage(4);
+      m_intake.setAlgaeVoltage(8);
   }
 
   @Override
@@ -29,6 +29,6 @@ public class IntakeAlgea extends Command{
 
   @Override
   public void end(boolean isInterrupted){
-      m_intake.setAlgaeVoltage(1);
+      m_intake.setAlgaeVoltage(2);
   }
 }

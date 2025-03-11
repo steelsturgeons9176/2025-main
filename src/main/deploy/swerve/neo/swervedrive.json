@@ -3,9 +3,9 @@
     "imu": {
       "type": "navx",
       "id": 0,
-      "canbus": "rio"
+      "canbus": "null"
     },
-    "invertedIMU": true,
+    "invertedIMU": false,
     "modules": [
       "frontleft.json",
       "frontright.json",

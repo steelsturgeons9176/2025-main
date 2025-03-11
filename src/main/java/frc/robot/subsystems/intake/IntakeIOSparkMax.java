@@ -3,12 +3,22 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.WristConstants;
 
@@ -29,6 +39,10 @@ public class IntakeIOSparkMax implements IntakeIO {
 
   SparkClosedLoopController m_pidController;
 
+  ArmFeedforward ff;
+
+  Double wristPosition;
+
   public IntakeIOSparkMax() {
     // find actual motor IDs
     algaeMotor1 = new SparkMax(ArmConstants.ARM_ALGAE_MOTOR1_ID, MotorType.kBrushless);
@@ -41,6 +55,9 @@ public class IntakeIOSparkMax implements IntakeIO {
     coralWristConfig = new SparkMaxConfig();
 
     m_pidController = coralWrist.getClosedLoopController();
+
+    ff =
+    new ArmFeedforward(0, .5, 0, 0);
 
 
     algeaMotorConfig
@@ -55,13 +72,14 @@ public class IntakeIOSparkMax implements IntakeIO {
 
     coralWristConfig
       .idleMode(IdleMode.kBrake)
-      .smartCurrentLimit(40);
+      .smartCurrentLimit(WristConstants.k_Wrist_Max_CURRENT_LIMIT)
+      .inverted(true).encoder.positionConversionFactor(1/WristConstants.WRIST_CONVERSION_FACTOR);
+      
 
     coralWristConfig.closedLoop
-      .p(0.55)
+      .p(1.0) //0.55
       .i(0)
       .d(0.0)
-      .velocityFF(0.00375)
       .outputRange(WristConstants.K_WRIST_MIN_OUTPUT, WristConstants.K_WRIST_MAX_OUTPUT);
 
     // ask about gear ratios for all motors
@@ -103,7 +121,8 @@ public class IntakeIOSparkMax implements IntakeIO {
   @Override
   public void wristAngle(Intake.wristPositions position) {
     // System.out.println("Wrist position: " + getWristPosition());
-    double ref = Intake.wristMap.get(position);
+    double ref = Intake.wristMap.get(position) + WristConstants.K_WRIST_STARTING_OFFSET;
+    SmartDashboard.putNumber("Wrist/Angle", ref);
     m_pidController.setReference(ref, SparkMax.ControlType.kPosition);
   }
 

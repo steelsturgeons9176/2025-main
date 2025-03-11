@@ -43,8 +43,12 @@ public class VisionSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("LimelightX", x);
         SmartDashboard.putNumber("LimelightY", y);
         SmartDashboard.putNumber("LimelightArea", area);
-
+        
         cameraPose = () -> align_left_branch();
+        SmartDashboard.putNumber("limelight/rotation", cameraPose.get().getRotation().getDegrees());
+        SmartDashboard.putNumber("limelight/translationy", cameraPose.get().getX());
+        SmartDashboard.putNumber("limelight/translationx", cameraPose.get().getX());
+        
     }
     public double limelight_aim_proportional()
   {    
@@ -78,7 +82,7 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public Pose2d align_left_branch() {
-    Transform3d transformToGoal = new Transform3d(new Translation3d(1.5, 0, 0),new Rotation3d(0, 0, Math.PI));
+    Transform3d transformToGoal = new Transform3d(new Translation3d(1.5, 0, 0), new Rotation3d(0, 0, Math.PI));
    
     Pose3d cameraPose3d = LimelightHelpers.getTargetPose3d_CameraSpace("limelight");
    

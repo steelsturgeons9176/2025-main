@@ -13,7 +13,7 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
+import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -222,6 +222,8 @@ public class ElevatorSubsystem extends SubsystemBase {
                       0.0)); }
                       
         // Once given pro we can chang positionVoltagerequest to torqueCurrentRequest
+        feedforward = ff.calculate(setpointState.position, setpointState.velocity);
+        m_elevatorLead.setControl(positionVoltageRequest.withPosition(setpointState.position).withFeedForward(feedforward));
     }
 
     private void updateMotionProfile() {

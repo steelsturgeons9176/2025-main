@@ -29,7 +29,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 5.07399577167019;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     //public static final double kDirectionSlewRate = 1.2; // radians per second
@@ -110,7 +110,7 @@ public final class Constants {
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-    public static final int kDrivingMotorCurrentLimit = 30; // amps
+    public static final int kDrivingMotorCurrentLimit = 40; // amps
     public static final int kTurningMotorCurrentLimit = 15; // amps
 
 
@@ -145,6 +145,8 @@ public final class Constants {
     public static final int kRearRightDrivingCanId = 41;
     public static final int kRearLeftCanCoderCanId = 0;
     public static final int kRearRightCanCoderCanId = 0;
+    public static final int KEndifactorCanId = 0; //14 after arm is taken off
+    public static final int kCANRangecCanId = 0; //15 once wrist deleted
   }
 
   public static final class GlobalConstants {
@@ -181,15 +183,17 @@ public final class Constants {
   }
 
   public static class WristConstants {
-    public static final double WRIST_CONVERSION_FACTOR = 243 / 9;
-    public static final double HOLD_ANGLE = 0; // TODO:
-    public static final double L1_ANGLE = 0.35 * WRIST_CONVERSION_FACTOR;
-    public static final double L2_ANGLE = 0.255 * WRIST_CONVERSION_FACTOR;
-    public static final double L3_ANGLE = 0.27 * WRIST_CONVERSION_FACTOR;
-    public static final double L4_ANGLE = 0.335 * WRIST_CONVERSION_FACTOR;
-    public static final double SOURCE_ANGLE = 0; // TODO:
-    public static final double K_WRIST_MIN_OUTPUT = -.1;
-    public static final double K_WRIST_MAX_OUTPUT = .1;
+    public static final double WRIST_CONVERSION_FACTOR = 15;
+    public static final double HOLD_ANGLE = -.2; // TODO:
+    public static final double L1_ANGLE = 0;
+    public static final double L2_ANGLE = -.1;
+    public static final double L3_ANGLE = -.1;
+    public static final double L4_ANGLE = -.3;
+    public static final double SOURCE_ANGLE = -.15; // TODO:
+    public static final double K_WRIST_MIN_OUTPUT = -.15;
+    public static final double K_WRIST_MAX_OUTPUT = .25;
+    public static final int k_Wrist_Max_CURRENT_LIMIT = 30;
+    public static final double K_WRIST_STARTING_OFFSET = .2;
   }
 
 
@@ -223,6 +227,15 @@ public final class Constants {
     public static final int ARM_WRIST_MOTOR_ID = 15;
   }
 
+
+  public static final class EndifactorConstant{
+    public final static int KLeadNeoId = 17; 
+    public final static int KFallowNeoId = 18; 
+
+
+
+
+  }
   public static final class ElevatorConstants {
     public static final int kLeadMotorID = 10;
     public static final int kFollowMotorID = 11;
