@@ -50,15 +50,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double pos;
 
     private TalonFXConfiguration m_leadConfig;
-    
+
     private double feedforward;
 
  //   private final RelativeEncoder ElevatorEncoder;
- 
+
 
     //private final PIDController m_AbsPidController = new PIDController(1, 0.0, 0.0);
 
-    
+
 
     private double currentGoal = 0.125f;
 
@@ -115,13 +115,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         mapAbs.put(elevatorPositions.SOURCE_HEIGHT, ElevatorConstants.SOURCE);
       //  mapAbs.put(armPositions.INTAKE, ArmConstants.INTAKE);
       //  mapAbs.put(armPositions.POOP, ArmConstants.POOP);
-        
+
 
 
       m_elevatorLead = new TalonFX(ElevatorConstants.kLeadMotorID);
         m_elevatorFollow = new TalonFX(ElevatorConstants.kFollowMotorID);
         m_elevatorFollow.setControl(new Follower(m_elevatorLead.getDeviceID(), true));
-        
+
 
         m_leadConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         m_leadConfig.Slot0 = new Slot0Configs().withKP(kP).withKI(0).withKD(0);
@@ -132,18 +132,18 @@ public class ElevatorSubsystem extends SubsystemBase {
       //  m_leadConfig.TorqueCurrent.PeakReverseTorqueCurrent = -40.0;
         m_leadConfig.CurrentLimits.StatorCurrentLimit = 40.0;
         m_leadConfig.CurrentLimits.SupplyCurrentLimit = 40.0;
-    
+
         m_leadConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         m_leadConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         //m_leadConfig.
-        
+
         m_elevatorLead.getConfigurator().apply(m_leadConfig, 0.25);
         m_leadConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         m_elevatorFollow.getConfigurator().apply(m_leadConfig,0.25);
         position = m_elevatorLead.getPosition();
         velocity = m_elevatorLead.getVelocity();
 
-        
+
 
         BaseStatusSignal.setUpdateFrequencyForAll(
         50.0,
@@ -152,8 +152,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         ParentDevice.optimizeBusUtilizationForAll(m_elevatorLead, m_elevatorFollow);
 
-        
-        
+
+
 
         p = kP;
         i = kI;
@@ -243,8 +243,8 @@ public class ElevatorSubsystem extends SubsystemBase {
       }
 
     public boolean raiseArmAbs(elevatorPositions position){
-    
-        
+
+
         double ref = mapAbs.get(position);
         currentGoal = ref;
         updateMotionProfile();
@@ -277,8 +277,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         kP = SmartDashboard.getNumber("Arm/KP", kP);
         kI = SmartDashboard.getNumber("Arm/KI", kI);
         kD = SmartDashboard.getNumber("Arm/KD", kD);
-            
-        kS = SmartDashboard.getNumber("Arm/KS", kS); 
+
+        kS = SmartDashboard.getNumber("Arm/KS", kS);
         kG = SmartDashboard.getNumber("Arm/KG", kG);
         kV = SmartDashboard.getNumber("Arm/KV", kV);
         kA = SmartDashboard.getNumber("Arm/KA", kA);
