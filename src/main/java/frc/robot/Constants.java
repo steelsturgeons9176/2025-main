@@ -145,8 +145,8 @@ public final class Constants {
     public static final int kRearRightDrivingCanId = 41;
     public static final int kRearLeftCanCoderCanId = 0;
     public static final int kRearRightCanCoderCanId = 0;
-    public static final int KEndifactorCanId = 0; //14 after arm is taken off
-    public static final int kCANRangecCanId = 0; //15 once wrist deleted
+    public static final int KEndifactorCanId = 14; //14 after arm is taken off
+    public static final int kCANRangecCanId = 15; //15 once wrist deleted
   }
 
   public static final class GlobalConstants {
@@ -228,7 +228,7 @@ public final class Constants {
   }
 
 
-  public static final class EndifactorConstant{
+  public static final class FunnelConstants{
     public final static int KLeadNeoId = 17; 
     public final static int KFallowNeoId = 18; 
 
@@ -246,10 +246,10 @@ public final class Constants {
     public static final double kElevatorMinOutput = 0;
     public static final double kElevatorMaxOutput = 70;
     public static final IdleMode kElevatorIdleMode = IdleMode.kBrake;
-    public static final double L1_HEIGHT = 0.125;
-    public static final double L2_HEIGHT = 6.75;
-    public static final double L3_HEIGHT = 12.5;
-    public static final double L4_HEIGHT = 19;
-    public static final double SOURCE = 0;
+    public static final double L1_HEIGHT = 0;
+    public static final double L2_HEIGHT = 8;
+    public static final double L3_HEIGHT = 15.45;
+    public static final double L4_HEIGHT = 28;
+    public static final double SOURCE = 8.8;
   }
 }

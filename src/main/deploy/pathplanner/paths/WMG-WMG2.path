@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 5.730122950819672,
+        "y": 7.207735655737704
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.0,
-        "y": 6.0
+        "x": 4.111782786885246,
+        "y": 7.01593237704918
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "WatchMeGo1"
     },
     {
       "anchor": {
-        "x": 1.8700819672131148,
-        "y": 6.728227459016393
+        "x": 2.3376024590163933,
+        "y": 5.1698258196721305
       },
       "prevControl": {
-        "x": 0.8700819672131148,
-        "y": 6.728227459016393
+        "x": 2.0618852459016392,
+        "y": 6.33263319672131
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,10 +45,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Example Paths",
+  "folder": "S1Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.34994401126806
+    "rotation": -179.0289780689209
   },
   "useDefaultConstraints": true
 }

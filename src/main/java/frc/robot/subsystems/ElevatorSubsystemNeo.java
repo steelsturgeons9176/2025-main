@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.EnumMap;
 
-
+import com.pathplanner.lib.path.GoalEndState;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -18,6 +18,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,7 +34,8 @@ public class ElevatorSubsystemNeo extends SubsystemBase {
         L4,
         SOURCE
     }
-
+    
+    
     private final SparkMax m_armLead;
     private final SparkMax m_armFollow;
 
@@ -92,10 +94,10 @@ public class ElevatorSubsystemNeo extends SubsystemBase {
         m_timer.start();
         m_timer.reset();
 
-        mapAbs.put(elevatorPositions.L1, ElevatorConstants.L1);
-        mapAbs.put(elevatorPositions.L2, ElevatorConstants.L2);
-        mapAbs.put(elevatorPositions.L3, ElevatorConstants.L3);
-        mapAbs.put(elevatorPositions.L4, ElevatorConstants.L4);
+        mapAbs.put(elevatorPositions.L1, ElevatorConstants.L1_HEIGHT);
+        mapAbs.put(elevatorPositions.L2, ElevatorConstants.L2_HEIGHT);
+        mapAbs.put(elevatorPositions.L3, ElevatorConstants.L3_HEIGHT);
+        mapAbs.put(elevatorPositions.L4, ElevatorConstants.L4_HEIGHT);
         mapAbs.put(elevatorPositions.SOURCE, ElevatorConstants.SOURCE);
       //  mapAbs.put(armPositions.INTAKE, ArmConstants.INTAKE);
       //  mapAbs.put(armPositions.POOP, ArmConstants.POOP);
@@ -264,6 +266,18 @@ public class ElevatorSubsystemNeo extends SubsystemBase {
     {
         m_armLead.set(0);
     }
+
+ public boolean currentPos(){
+
+if (ElevatorEncoder.getPosition() == currentGoal) {
+return true;
+} else {
+    return false;
+}
+    
+
+ }
+
 
     public void tuneNumbers()
     {

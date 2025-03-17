@@ -1,15 +1,14 @@
-package frc.robot.commands;
+package frc.robot.commands.autocommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class ElevatorToPosition extends Command {
+public class L4Exgestcoral extends Command {
     private ElevatorSubsystem m_elevator;
     private ElevatorSubsystem.elevatorPositions m_tarPosition;
-    
 
 
-    public ElevatorToPosition(ElevatorSubsystem elevator, ElevatorSubsystem.elevatorPositions pos){
+    public L4Exgestcoral(ElevatorSubsystem elevator, ElevatorSubsystem.elevatorPositions pos){
         m_elevator = elevator;
         m_tarPosition = pos;
         addRequirements(m_elevator);
@@ -19,20 +18,14 @@ public class ElevatorToPosition extends Command {
     @Override
     public void initialize(){
 
-    }
+    } 
 
     @Override
     public void execute(){
         m_elevator.raiseArmAbs(m_tarPosition);
-
-        // if (m_elevator.currentPos()==true) {
-        //                end(true);
-
-        // }else{
-
-        //     m_elevator.raiseArmAbs(m_tarPosition);
-
-        // }
+        if(currentPos() = true){
+            end(true);
+        }
     }
 
     @Override
@@ -42,9 +35,6 @@ public class ElevatorToPosition extends Command {
 
     @Override
     public void end(boolean isInterrupted){
-
-        
-       
 
     }
 }

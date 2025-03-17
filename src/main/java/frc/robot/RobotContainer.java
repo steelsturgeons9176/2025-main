@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ActivateTrapdoor;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ClimberDownCommand;
 import frc.robot.commands.ClimberUpCommand;
@@ -14,13 +15,18 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExgestAlgea;
 import frc.robot.commands.IntakeAlgea;
 import frc.robot.commands.IntakeCoral;
+import frc.robot.commands.ResetTrapdoorServo;
 import frc.robot.commands.ExgestCoral;
+import frc.robot.commands.FunnelDebug;
 import frc.robot.commands.WristScoreHigh;
 import frc.robot.commands.WristScoreLow;
 import frc.robot.commands.WristScoreMid;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.EndifactorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.FunnelSubsystem;
+import frc.robot.subsystems.TrapDoorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.elevatorPositions;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
@@ -46,8 +52,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -64,9 +72,13 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final ClimberSubsystem m_climber = new ClimberSubsystem();
   public final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
-  public final IntakeIOSparkMax m_intakeIO = new IntakeIOSparkMax();
-  public final Intake m_intake = new Intake(m_intakeIO);
+ // public final IntakeIOSparkMax m_intakeIO = new IntakeIOSparkMax();
+ public final FunnelSubsystem m_funnel = new FunnelSubsystem();
+ // public final Intake m_intake = new Intake(m_intakeIO);
   public final VisionSubsystem m_vision = new VisionSubsystem();
+  public final EndifactorSubsystem m_endifactor = new EndifactorSubsystem();
+  public final TrapDoorSubsystem m_trapdoor = new TrapDoorSubsystem();
+
   //private final Elevator elevator;
 
 
@@ -84,7 +96,7 @@ public class RobotContainer {
                 SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> m_driverController.getLeftY() * -1,
                                                                 () -> m_driverController.getLeftX() * -1)
-                                                            .withControllerRotationAxis(() -> m_driverController.getRightX())
+                                                            .withControllerRotationAxis(() -> -m_driverController.getRightX())
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
@@ -143,14 +155,24 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     
-    autoChooser = AutoBuilder.buildAutoChooser();
 
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("ElvatorToL2", new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
-
-    NamedCommands.registerCommand("ElevatorToL2", new ElevatorToPosition(m_elevator, elevatorPositions.L3_HEIGHT));
-
+    NamedCommands.registerCommand("ElevatorToL4", new InstantCommand(()-> m_elevator.raiseArmAbs(elevatorPositions.L4_HEIGHT)));//new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT));
+    NamedCommands.registerCommand("ElevatorToL1",  new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
+    NamedCommands.registerCommand("ElevatorToL2", new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
+    NamedCommands.registerCommand("ExgestCoral", new InstantCommand(()-> m_endifactor.setCoralVoltage(4)));//new ExgestCoral(m_endifactor));
+    NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(m_endifactor, m_funnel));  
+   // NamedCommands.registerCommand("ElevatorToL4Shoot", new SequentialCommandGroup(new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT), new
+// ExgestCoral(m_endifactor)));
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
   }
 
   /**
@@ -197,28 +219,36 @@ public class RobotContainer {
       
     } else
     {
-      m_intake.setDefaultCommand(new RunCommand(() -> m_intake.wristAngle(wristPositions.HOLD_ANGLE), m_intake));
+    //  m_intake.setDefaultCommand(new RunCommand(() -> m_intake.wristAngle(wristPositions.HOLD_ANGLE), m_intake));
       //drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
       m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
       m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
-      m_driverController.triangle().whileTrue(new RunCommand(
-        () -> drivebase.visionReef(m_vision.align_left_branch_supplier()), drivebase));
-      m_driverController.cross().onTrue(Commands.runOnce(drivebase::zeroGyro));
+      m_driverController.povLeft().onTrue(new ActivateTrapdoor(m_trapdoor));
 
-      m_manipController.button(1).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
-      m_manipController.button(3).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
-      m_manipController.button(4).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L3_HEIGHT));
-      m_manipController.button(2).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT));
-      m_manipController.povLeft().whileTrue((new WristScoreMid(m_intake)));
-      m_manipController.povDown().whileTrue(new WristScoreLow(m_intake));
-      m_manipController.povRight().whileTrue
-      (new WristScoreHigh(m_intake));
-      m_manipController.povUp().whileTrue(new WristScoreMid(m_intake));
+      m_driverController.triangle().onTrue(new ResetTrapdoorServo(m_trapdoor)); // needed for reseting servos
+
+      // m_driverController.triangle().whileTrue(new RunCommand(
+      //   () -> drivebase.visionReef(m_vision.align_left_branch_supplier()), drivebase));
+       m_driverController.cross().onTrue(Commands.runOnce(drivebase::zeroGyro));
+
+      m_manipController.button(2).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
+      m_manipController.button(1).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
+      m_manipController.button(3).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L3_HEIGHT));
+      m_manipController.button(4).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT));
+     // m_manipController.button(5).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.SOURCE_HEIGHT));
+      m_manipController.povRight().whileTrue(new FunnelDebug(m_funnel));
+      m_manipController.button(6).whileTrue(new IntakeCoral(m_endifactor, m_funnel));
+      m_manipController.axisGreaterThan(3, 0.2).whileTrue(new ExgestCoral(m_endifactor));
+    //  m_manipController.povLeft().whileTrue((new WristScoreMid(m_intake)));
+    //  m_manipController.povDown().whileTrue(new WristScoreLow(m_intake));
+    //  m_manipController.povRight().whileTrue
+    //  (new WristScoreHigh(m_intake));
+    //  m_manipController.povUp().whileTrue(new WristScoreMid(m_intake));
     //  m_manipController.button(6).onTrue(new IntakeCoral(m_intake));
     //  m_manipController.axisGreaterThan(3, .2).whileTrue(new ExgestCoral(m_intake));
-      m_manipController.button(5).onTrue(new IntakeAlgea(m_intake));
-      m_manipController.axisGreaterThan(2, .2).whileTrue(new ExgestAlgea(m_intake));
+    //  m_manipController.button(5).onTrue(new IntakeAlgea(m_intake));
+    //  m_manipController.axisGreaterThan(2, .2).whileTrue(new ExgestAlgea(m_intake));
       
     }
 

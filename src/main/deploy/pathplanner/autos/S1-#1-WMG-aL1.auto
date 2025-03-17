@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Watch me go forwad"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "WMG-aL1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ExgestCoral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "aL1-Lsource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LLSource-aR1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ExgestCoral"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

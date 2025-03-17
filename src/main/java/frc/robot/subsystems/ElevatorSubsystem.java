@@ -13,6 +13,7 @@ import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.servohub.ServoChannel;
 import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.MathUtil;
@@ -40,6 +41,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private final TalonFX m_elevatorLead;
     private final TalonFX m_elevatorFollow;
+    
 
     //private final PositionTorqueCurrentFOC torqueCurrentRequest = new PositionTorqueCurrentFOC(0).withUpdateFreqHz(0);
     private final PositionVoltage positionVoltageRequest = new PositionVoltage(0).withUpdateFreqHz(0);
@@ -108,10 +110,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_timer.start();
         m_timer.reset();
 
-        mapAbs.put(elevatorPositions.L1_HEIGHT, ElevatorConstants.L1);
-        mapAbs.put(elevatorPositions.L2_HEIGHT, ElevatorConstants.L2);
-        mapAbs.put(elevatorPositions.L3_HEIGHT, ElevatorConstants.L3);
-        mapAbs.put(elevatorPositions.L4_HEIGHT, ElevatorConstants.L4);
+        mapAbs.put(elevatorPositions.L1_HEIGHT, ElevatorConstants.L1_HEIGHT);
+        mapAbs.put(elevatorPositions.L2_HEIGHT, ElevatorConstants.L2_HEIGHT);
+        mapAbs.put(elevatorPositions.L3_HEIGHT, ElevatorConstants.L3_HEIGHT);
+        mapAbs.put(elevatorPositions.L4_HEIGHT, ElevatorConstants.L4_HEIGHT);
         mapAbs.put(elevatorPositions.SOURCE_HEIGHT, ElevatorConstants.SOURCE);
       //  mapAbs.put(armPositions.INTAKE, ArmConstants.INTAKE);
       //  mapAbs.put(armPositions.POOP, ArmConstants.POOP);
@@ -126,7 +128,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_leadConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         m_leadConfig.Slot0 = new Slot0Configs().withKP(kP).withKI(0).withKD(0);
         m_leadConfig.Feedback.SensorToMechanismRatio = reduction;
-        m_leadConfig.Voltage.PeakForwardVoltage = 12;
+        m_leadConfig.Voltage.PeakForwardVoltage = 16;
         m_leadConfig.Voltage.PeakReverseVoltage = -8;
         //m_leadConfig.TorqueCurrent.PeakForwardTorqueCurrent = 40.0;
       //  m_leadConfig.TorqueCurrent.PeakReverseTorqueCurrent = -40.0;
@@ -161,7 +163,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         //m_pidController.enableContinuousInput(0, 1);
         profile =
         new TrapezoidProfile(
-            new TrapezoidProfile.Constraints(4.0, 2.0));
+            new TrapezoidProfile.Constraints(8.0, 8.0)); // 4V 2A
 
         SmartDashboard.putNumber("Arm/goal", currentGoal);
         SmartDashboard.putNumber("Arm/KP", kP);
@@ -265,6 +267,26 @@ public class ElevatorSubsystem extends SubsystemBase {
         double currentEncoderPosition = position.getValueAsDouble();
         return (Math.abs(currentEncoderPosition - currentGoal) < Constants.ArmConstants.kAllowedErrAbs);
     }
+
+
+    public boolean currentPos(){
+
+        if (position.getValueAsDouble() == currentGoal) {
+            return true;
+        } else {
+            return false;
+        }
+
+        
+
+        
+    }
+
+    public void stopMotors(double m_speed){
+        m_elevatorLead.set(m_speed);
+        m_elevatorFollow.set(m_speed);
+    }
+    
 
     public void noArmPower()
     {

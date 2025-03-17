@@ -4,19 +4,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.EndifactorSubsystem;
 
-public class ExgestCoral extends Command{
+public class InverseCoralExgest extends Command{
     private EndifactorSubsystem m_endifactor;
 
 
-    public ExgestCoral(EndifactorSubsystem endifactor){
+    public InverseCoralExgest(EndifactorSubsystem endifactor){
         m_endifactor = endifactor;
         addRequirements(m_endifactor);
     }
 
     @Override
     public void initialize(){
-        m_endifactor.setCoralVoltage(4);
-
+        m_endifactor.setCoralVoltage(-4);
     }
 
     @Override

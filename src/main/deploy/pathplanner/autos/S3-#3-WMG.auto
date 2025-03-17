@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S3-#3-WMG"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "WMG-dL1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ExgestCoral"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

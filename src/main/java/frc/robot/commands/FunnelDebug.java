@@ -1,27 +1,27 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.FunnelSubsystem;
 import frc.robot.subsystems.intake.Intake;
 
-public class ExgestAlgea extends Command{
-  private Intake m_intake;
+public class FunnelDebug extends Command{
+  private FunnelSubsystem m_funnel;
 
 
-  public ExgestAlgea(Intake intake){
-      m_intake = intake;
-      addRequirements(m_intake);
+  public FunnelDebug(FunnelSubsystem funnel){
+    m_funnel = funnel;
+      addRequirements(m_funnel);
   }
 
   @Override
   public void initialize(){
-      m_intake.setAlgaeVoltage(-4);
+    m_funnel.setVoltage(-4);;
   }
 
   @Override
   public void execute(){
 
   }
-
 
   @Override
   public boolean isFinished(){
@@ -30,6 +30,6 @@ public class ExgestAlgea extends Command{
 
   @Override
   public void end(boolean isInterrupted){
-      m_intake.setAlgaeVoltage(0);
+    m_funnel.setVoltage(0);
   }
 }
