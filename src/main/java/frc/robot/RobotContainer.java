@@ -26,6 +26,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EndifactorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FunnelSubsystem;
+import frc.robot.subsystems.PhotonVisionSubsystem;
 import frc.robot.subsystems.TrapDoorSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem.elevatorPositions;
 import frc.robot.subsystems.intake.Intake;
@@ -78,6 +79,7 @@ public class RobotContainer {
   public final VisionSubsystem m_vision = new VisionSubsystem();
   public final EndifactorSubsystem m_endifactor = new EndifactorSubsystem();
   public final TrapDoorSubsystem m_trapdoor = new TrapDoorSubsystem();
+  public final PhotonVisionSubsystem m_photon = new PhotonVisionSubsystem();
 
   //private final Elevator elevator;
 
@@ -216,6 +218,8 @@ public class RobotContainer {
     
       m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
       m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
+      m_driverController.triangle().whileTrue(new RunCommand(() -> m_photon.hasTarget(), m_photon));
+      m_driverController.cross().whileTrue(drivebase.aimAtTarget(drivebase.getCameras()));
       
     } else
     {
@@ -230,7 +234,7 @@ public class RobotContainer {
 
       // m_driverController.triangle().whileTrue(new RunCommand(
       //   () -> drivebase.visionReef(m_vision.align_left_branch_supplier()), drivebase));
-       m_driverController.cross().onTrue(Commands.runOnce(drivebase::zeroGyro));
+      m_driverController.cross().onTrue(Commands.runOnce(drivebase::zeroGyro));
 
       m_manipController.button(2).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
       m_manipController.button(1).onTrue(new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
