@@ -35,6 +35,15 @@ public class PhotonVisionSubsystem extends SubsystemBase {
             return result.hasTargets();
         }
 
+
+
+        public boolean goToTarget(){
+
+            return false;
+
+
+        }
+
         public void testTarget()
         {
             var result = camera.getLatestResult();

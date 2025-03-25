@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.funnel.trapdoor;
 
 
 import edu.wpi.first.wpilibj.Servo; 

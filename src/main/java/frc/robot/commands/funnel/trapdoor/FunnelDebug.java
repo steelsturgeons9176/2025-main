@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.funnel.trapdoor;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FunnelSubsystem;
@@ -15,7 +15,7 @@ public class FunnelDebug extends Command{
 
   @Override
   public void initialize(){
-    m_funnel.setVoltage(-4);;
+    m_funnel.setVoltage(4);;
   }
 
   @Override

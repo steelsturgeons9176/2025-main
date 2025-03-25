@@ -1,27 +1,26 @@
-package frc.robot.commands;
+package frc.robot.commands.Algae;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class ExgestAlgea extends Command{
+public class IntakeAlgae extends Command{
   private Intake m_intake;
 
 
-  public ExgestAlgea(Intake intake){
+  public IntakeAlgae(Intake intake){
       m_intake = intake;
       addRequirements(m_intake);
   }
 
   @Override
   public void initialize(){
-      m_intake.setAlgaeVoltage(-4);
+      m_intake.setAlgaeVoltage(8);
   }
 
   @Override
   public void execute(){
 
   }
-
 
   @Override
   public boolean isFinished(){
@@ -30,6 +29,6 @@ public class ExgestAlgea extends Command{
 
   @Override
   public void end(boolean isInterrupted){
-      m_intake.setAlgaeVoltage(0);
+      m_intake.setAlgaeVoltage(2);
   }
 }

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.coral;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,7 +20,7 @@ public class IntakeCoral extends Command{
     public void initialize(){
         m_endifactor.setCoralDutyCylce(.15);
         isSeen = false;
-        m_funnel.setVoltage(12);
+        m_funnel.setVoltage(-6);
     }
 
     @Override

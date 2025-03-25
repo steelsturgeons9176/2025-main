@@ -6,21 +6,21 @@ package frc.robot;
 
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ActivateTrapdoor;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ClimberDownCommand;
-import frc.robot.commands.ClimberUpCommand;
-import frc.robot.commands.ElevatorToPosition;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.ExgestAlgea;
-import frc.robot.commands.IntakeAlgea;
-import frc.robot.commands.IntakeCoral;
-import frc.robot.commands.ResetTrapdoorServo;
-import frc.robot.commands.ExgestCoral;
-import frc.robot.commands.FunnelDebug;
-import frc.robot.commands.WristScoreHigh;
-import frc.robot.commands.WristScoreLow;
-import frc.robot.commands.WristScoreMid;
+import frc.robot.commands.Algae.ExgestAlgae;
+import frc.robot.commands.Algae.IntakeAlgae;
+import frc.robot.commands.climber.ClimberDownCommand;
+import frc.robot.commands.climber.ClimberUpCommand;
+import frc.robot.commands.coral.ExgestCoral;
+import frc.robot.commands.coral.IntakeCoral;
+import frc.robot.commands.elevator.ElevatorToPosition;
+import frc.robot.commands.funnel.trapdoor.ActivateTrapdoor;
+import frc.robot.commands.funnel.trapdoor.FunnelDebug;
+import frc.robot.commands.funnel.trapdoor.ResetTrapdoorServo;
+import frc.robot.commands.wrist.WristScoreHigh;
+import frc.robot.commands.wrist.WristScoreLow;
+import frc.robot.commands.wrist.WristScoreMid;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EndifactorSubsystem;
@@ -160,10 +160,11 @@ public class RobotContainer {
 
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("ElevatorToL4", new InstantCommand(()-> m_elevator.raiseArmAbs(elevatorPositions.L4_HEIGHT)));//new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT));
-    NamedCommands.registerCommand("ElevatorToL1",  new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
-    NamedCommands.registerCommand("ElevatorToL2", new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
+   // NamedCommands.registerCommand("ElevatorToL1",  new ElevatorToPosition(m_elevator, elevatorPositions.L1_HEIGHT));
+   // NamedCommands.registerCommand("ElevatorToL2", new ElevatorToPosition(m_elevator, elevatorPositions.L2_HEIGHT));
     NamedCommands.registerCommand("ExgestCoral", new InstantCommand(()-> m_endifactor.setCoralVoltage(4)));//new ExgestCoral(m_endifactor));
     NamedCommands.registerCommand("IntakeCoral", new IntakeCoral(m_endifactor, m_funnel));  
+   // NamedCommands.registerCommand("AutoAlign", new RunCommand(() -> m_photon.hasTarget(), m_photon));
    // NamedCommands.registerCommand("ElevatorToL4Shoot", new SequentialCommandGroup(new ElevatorToPosition(m_elevator, elevatorPositions.L4_HEIGHT), new
 // ExgestCoral(m_endifactor)));
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
@@ -229,7 +230,7 @@ public class RobotContainer {
       m_driverController.square().whileTrue(new ClimberUpCommand(m_climber));
       m_driverController.circle().whileTrue(new ClimberDownCommand(m_climber));
       m_driverController.povLeft().onTrue(new ActivateTrapdoor(m_trapdoor));
-
+    //.  m_driverController.triangle().whileTrue(new RunCommand(() -> m_photon.hasTarget(), m_photon));
       m_driverController.triangle().onTrue(new ResetTrapdoorServo(m_trapdoor)); // needed for reseting servos
 
       // m_driverController.triangle().whileTrue(new RunCommand(

@@ -5,27 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Watch me go forwad"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "ExgestCoral"
+            "name": "ElevatorToL4"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevatorToL4"
+            "waitTime": 2.0
           }
         }
       ]
