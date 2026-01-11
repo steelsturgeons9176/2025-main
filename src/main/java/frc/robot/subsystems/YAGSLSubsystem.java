@@ -54,22 +54,22 @@ public class YAGSLSubsystem {
         absoluteEncoder = new CANcoder(cancoderCANID);
         configSteer = new SparkMaxConfig();
         configDrive = new SparkMaxConfig();
-        
+
         // Get the PID Controllers
         drivingPIDController = driveMotor.getClosedLoopController();
         turningPIDController = steerMotor.getClosedLoopController();
-        
+
         // Get the encoders
         driveEncoder = driveMotor.getEncoder();
         steerEncoder = steerMotor.getEncoder();
-        
+
         // Reset everything to factory default
        // driveMotor.configure(configDrive, null,  PersistMode.kPersistParameters);
        // steerMotor.configure(configSteer, null,  PersistMode.kPersistParameters);
         absoluteEncoder.getConfigurator().apply(new CANcoderConfiguration());
-        
+
         // Continue configuration here..
-        
+
         // CANcoder Configuration
         CANcoderConfigurator cfg = absoluteEncoder.getConfigurator();
         cfg.apply(new CANcoderConfiguration());
@@ -94,14 +94,14 @@ public class YAGSLSubsystem {
         configSteer.closedLoop.positionWrappingEnabled(true);
         configSteer.closedLoop.positionWrappingMinInput(0);
         configSteer.closedLoop.positionWrappingMaxInput(90);
-        
+
         // Set the PID gains for the turning motor. Note these are example gains, and you
         // may need to tune them for your own robot!
        // turningPIDController.setP(ModuleConstants.kTurningP);
       //  turningPIDController.setI(ModuleConstants.kTurningI);
       //  turningPIDController.setD(ModuleConstants.kTurningD);
        // turningPIDController.setFF(ModuleConstants.kTurningFF);
-        //configSteer.closedLoop.pidf(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD, 
+        //configSteer.closedLoop.pidf(ModuleConstants.kTurningP, ModuleConstants.kTurningI, ModuleConstants.kTurningD,
         //ModuleConstants.kTurningFF);
         configSteer.closedLoop.p(ModuleConstants.kTurningP);
         configSteer.closedLoop.i(ModuleConstants.kTurningI);
@@ -113,8 +113,8 @@ public class YAGSLSubsystem {
         configDrive.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         // Apply position and velocity conversion factors for the driving encoder. The
         // native units for position and velocity are rotations and RPM, respectively,
-        // but we want meters and meters per second to use with WPILib's swerve APIs.        
-        configDrive.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);        
+        // but we want meters and meters per second to use with WPILib's swerve APIs.
+        configDrive.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
         configDrive.encoder.velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
         // Set the PID gains for the driving motor. Note these are example gains, and you
         // may need to tune them for your own robot!
@@ -122,21 +122,21 @@ public class YAGSLSubsystem {
         configDrive.closedLoop.i(ModuleConstants.kDrivingI);
         configDrive.closedLoop.d(ModuleConstants.kDrivingD);
         configDrive.closedLoop.velocityFF(ModuleConstants.kDrivingFF);
-        
+
         // Save the SPARK MAX configurations. If a SPARK MAX browns out during
         // operation, it will maintain the above configurations.
         driveMotor.configure(configDrive, ResetMode.kResetSafeParameters,  PersistMode.kPersistParameters);
         steerMotor.configure(configSteer, ResetMode.kResetSafeParameters,  PersistMode.kPersistParameters);
-          
+
         driveEncoder.setPosition(0);
         //steerEncoder.setPosition(absoluteEncoder.getAbsolutePosition().refresh().getValue() * 360);
         steerEncoder.setPosition(absoluteEncoder.getAbsolutePosition(true).getValueAsDouble() * 360);
     }
-    
-    
+
+
     /**
     Get the distance in meters.
-    
+
     public double getDistance()
     {
         return driveEncoder.getPosition();
@@ -145,7 +145,7 @@ public class YAGSLSubsystem {
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(driveEncoder.getPosition(), Rotation2d.fromDegrees(steerEncoder.getPosition()));
     }
-    
+
     public SwerveModuleState getState() {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
@@ -183,16 +183,16 @@ public class YAGSLSubsystem {
 
     /**
     Get the angle.
-    
+
     public Rotation2d getAngle()
     {
           return Rotation2d.fromDegrees(steerEncoder.getPosition());
     }
-    
+
     /**
     Set the swerve module state.
     @param state The swerve module state to set.
-    
+
     public void setState(SwerveModuleState state)
     {
           turningPIDController.setReference(state.angle.getDegrees(), ControlType.kPosition);
